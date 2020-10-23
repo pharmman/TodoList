@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import './App.css';
 import {ToDoList} from './ToDoList';
 import {v1} from 'uuid';
+import {AddItemForm} from './AddItemForm';
 
 export type TaskType = {
     id: string,
@@ -84,15 +85,42 @@ function App() {
         }
     }
 
+    function changeTaskTitle(taskID: string, title: string, todoListID: string) {
+        const todoList = tasks[todoListID];
+        let task = todoList.find(t => t.id === taskID);
+        if (task) {
+            task.title = title;
+            setTasks({...tasks});
+        }
+    }
+
     function removeTodoList(todoListID: string) {
         setTodoLists(todoLists.filter(tl => tl.id !== todoListID));
         delete tasks[todoListID];
         setTasks({...tasks});
     }
 
+    function addTodoList(title: string) {
+        const newTodoListId = v1();
+        const newTodoList: TodoListType = {
+            id: newTodoListId, title: title, filter: 'all'
+        };
+        setTodoLists([newTodoList, ...todoLists]);
+        setTasks({...tasks, [newTodoListId]: []});
+    }
+
+    function changeTodoListTitle(todoListId: string, title: string) {
+        const todolist = todoLists.find(tl => todoListId === tl.id);
+        if (todolist) {
+            todolist.title = title
+            setTodoLists([...todoLists])
+        }
+    }
+
 
     return (
         <div className="App">
+            <AddItemForm addItem={addTodoList}/>
             {
                 todoLists.map(tl => {
                     let tasksForTodoList = tasks[tl.id];
@@ -114,7 +142,9 @@ function App() {
                             changeFilter={changeFilter}
                             addTask={addTask}
                             changeTaskStatus={changeTaskStatus}
-                            removeTodoList={removeTodoList}/>
+                            removeTodoList={removeTodoList}
+                            changeTodoListTitle={changeTodoListTitle}
+                            changeTaskTitle={changeTaskTitle}/>
                     )
                 })
             }
