@@ -2,6 +2,8 @@ import React, {ChangeEvent} from 'react';
 import {FilterValuesType, TaskType} from './App'
 import {AddItemForm} from './AddItemForm';
 import {EditableSpan} from './EditableSpan';
+import {Button, Checkbox, IconButton} from '@material-ui/core';
+import {Delete} from '@material-ui/icons';
 
 type PropsType = {
     id: string
@@ -28,7 +30,9 @@ export function ToDoList(props: PropsType) {
         debugger
         props.addTask(title, props.id);
     }
-    const changeTodoListTitle = (title: string) => {props.changeTodoListTitle(props.id, title)}
+    const changeTodoListTitle = (title: string) => {
+        props.changeTodoListTitle(props.id, title)
+    }
 
 
     const tasks = props.tasks.map(t => {
@@ -40,14 +44,16 @@ export function ToDoList(props: PropsType) {
             props.changeTaskStatus(t.id, e.currentTarget.checked, props.id)
         };
         return (
-            <li key={t.id} className={t.isDone ? 'is-done' : ''}><
-                input
-                type="checkbox"
-                onChange={changeStatus}
-                checked={t.isDone}/>
+            <li style={{marginLeft: '0'}} key={t.id} className={t.isDone ? 'is-done' : ''}>
+                <Checkbox
+                    onChange={changeStatus}
+                    checked={t.isDone}
+                    color={'primary'}
+                />
                 <EditableSpan changeTitle={changeTitle} title={t.title}/>
-                {/*<span>{t.title}</span>*/}
-                <button onClick={removeTask}>X</button>
+                <IconButton onClick={removeTask} color={'primary'}>
+                    <Delete/>
+                </IconButton>
             </li>
         )
     })
@@ -56,27 +62,38 @@ export function ToDoList(props: PropsType) {
         <div className="App">
             <div>
                 <h3><EditableSpan title={props.title} changeTitle={changeTodoListTitle}/>
-                    <button onClick={deleteTodoList}>Delete</button>
-            </h3>
-            <AddItemForm addItem={addTask}/>
-            <ul>
-                {tasks}
-            </ul>
-            <div>
-                <button
-                    className={props.filter === 'all' ? 'active' : ''}
-                    onClick={onSetAllFilterClick}>All
-                </button>
-                <button
-                    className={props.filter === 'active' ? 'active' : ''}
-                    onClick={onSetActiveFilterClick}>Active
-                </button>
-                <button
-                    className={props.filter === 'completed' ? 'active' : ''}
-                    onClick={onSetCompletedFilterClick}>Completed
-                </button>
+                    <IconButton onClick={deleteTodoList} color={'primary'}>
+                        <Delete/>
+                    </IconButton>
+                </h3>
+                <AddItemForm addItem={addTask}/>
+                <ul style={{listStyle: 'none', padding:'0'}}>
+                    {tasks}
+                </ul>
+                <div>
+                    <Button
+                        style={{margin: '3px'}}
+                        variant={props.filter === 'all' ? 'outlined' : 'contained'}
+                        size={'small'}
+                        color={'primary'}
+                        onClick={onSetAllFilterClick}>All
+                    </Button>
+                    <Button
+                        style={{margin: '3px'}}
+                        variant={props.filter === 'active' ? 'outlined' : 'contained'}
+                        size={'small'}
+                        color={'primary'}
+                        onClick={onSetActiveFilterClick}>Active
+                    </Button>
+                    <Button
+                        style={{margin: '3px'}}
+                        variant={props.filter === 'completed' ? 'outlined' : 'contained'}
+                        size={'small'}
+                        color={'primary'}
+                        onClick={onSetCompletedFilterClick}>Completed
+                    </Button>
+                </div>
             </div>
         </div>
-</div>
-)
+    )
 }

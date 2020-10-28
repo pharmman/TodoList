@@ -3,6 +3,8 @@ import './App.css';
 import {ToDoList} from './ToDoList';
 import {v1} from 'uuid';
 import {AddItemForm} from './AddItemForm';
+import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from '@material-ui/core';
+import {Menu} from '@material-ui/icons';
 
 export type TaskType = {
     id: string,
@@ -120,7 +122,23 @@ function App() {
 
     return (
         <div className="App">
-            <AddItemForm addItem={addTodoList}/>
+            <AppBar position="static">
+                <Toolbar>
+                    <IconButton edge="start" color="inherit" aria-label="menu">
+                        <Menu />
+                    </IconButton>
+                    <Typography variant="h6">
+                        News
+                    </Typography>
+                    <Button color="inherit">Login</Button>
+                </Toolbar>
+            </AppBar>
+
+            <Container fixed>
+                <Grid container style={{padding: '15px'}}>
+                    <AddItemForm addItem={addTodoList}/>
+                </Grid>
+                <Grid container spacing={4}>
             {
                 todoLists.map(tl => {
                     let tasksForTodoList = tasks[tl.id];
@@ -132,6 +150,8 @@ function App() {
                         tasksForTodoList = tasks[tl.id].filter(t => t.isDone);
                     }
                     return (
+                        <Grid item>
+                            <Paper elevation={3} style={{padding: '15px'}}>
                         <ToDoList
                             key={tl.id}
                             id={tl.id}
@@ -145,9 +165,13 @@ function App() {
                             removeTodoList={removeTodoList}
                             changeTodoListTitle={changeTodoListTitle}
                             changeTaskTitle={changeTaskTitle}/>
+                            </Paper>
+                        </Grid>
                     )
                 })
             }
+                </Grid>
+            </Container>
         </div>
     );
 }
