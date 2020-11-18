@@ -40,7 +40,7 @@ test('correct task should be deleted from correct todolist', () => {
     })
 })
 
-test('correct task should be deleted from correct added', () => {
+test('correct task should be added from correct todolist', () => {
 
     const action = addTaskAC('todolistId1', 'newTask');
 
