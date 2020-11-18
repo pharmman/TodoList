@@ -16,7 +16,6 @@ beforeEach(() => {
             {id: '3', title: 'tea', isDone: false}
         ]
     };
-
 })
 
 test('correct task should be deleted from correct todolist', () => {
