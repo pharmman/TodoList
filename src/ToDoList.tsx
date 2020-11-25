@@ -18,51 +18,37 @@ type PropsType = {
 }
 
 export function ToDoList(props: PropsType) {
-    let tasks = useSelector<AppRootStateType, Array<TaskType>>(state => state.tasks[props.id])
+    const tasks = useSelector<AppRootStateType, Array<TaskType>>(state => state.tasks[props.id])
     const dispatch = useDispatch();
 
-    function addTask(taskTitle: string, todoListID: string) {
-        dispatch(addTaskAC(todoListID, taskTitle))
-    }
-
-    function removeTask(taskID: string, todoListID: string) {
-        dispatch(removeTaskAC(taskID, todoListID))
-    }
-
-    function changeTaskStatus(taskID: string, isDone: boolean, todoListID: string) {
-        dispatch(changeTaskStatusAC(todoListID, taskID, isDone))
-    }
-
-    function changeTaskTitle(taskID: string, title: string, todoListID: string) {
-        dispatch(changeTaskTitleAC(todoListID, taskID, title))
-    }
+    let tasksForTodoList: Array<TaskType> = tasks
 
     if (props.filter === 'active') {
-        tasks = tasks.filter(t => !t.isDone);
+        tasksForTodoList = tasks.filter(t => !t.isDone);
     }
     if (props.filter === 'completed') {
-        tasks = tasks.filter(t => t.isDone);
+        tasksForTodoList = tasks.filter(t => t.isDone);
     }
 
     const onSetAllFilterClick = () => props.changeFilter('all', props.id);
     const onSetActiveFilterClick = () => props.changeFilter('active', props.id);
     const onSetCompletedFilterClick = () => props.changeFilter('completed', props.id);
     const deleteTodoList = () => props.removeTodoList(props.id);
-    const addItem = (title: string) => {
-        addTask(title, props.id);
+    const addTask = (title: string) => {
+        dispatch(addTaskAC(props.id, title))
     }
     const changeTodoListTitle = (title: string) => {
         props.changeTodoListTitle(props.id, title)
     }
 
 
-    const CurrentTasks = tasks.map(t => {
-        const removeCurrentTask = () => removeTask(t.id, props.id);
+    const currentTasks = tasksForTodoList.map(t => {
+        const removeTask = () => dispatch(removeTaskAC(t.id, props.id));
         const changeTitle = (title: string) => {
-            changeTaskTitle(t.id, title, props.id)
+            dispatch(changeTaskTitleAC(props.id, t.id, title))
         }
         const changeStatus = (e: ChangeEvent<HTMLInputElement>) => {
-            changeTaskStatus(t.id, e.currentTarget.checked, props.id)
+            dispatch(changeTaskStatusAC(props.id, t.id, e.currentTarget.checked))
         };
         return (
             <li style={{marginLeft: '0'}} key={t.id} className={t.isDone ? 'is-done' : ''}>
@@ -72,12 +58,13 @@ export function ToDoList(props: PropsType) {
                     color={'primary'}
                 />
                 <EditableSpan changeTitle={changeTitle} title={t.title}/>
-                <IconButton onClick={removeCurrentTask} color={'primary'}>
+                <IconButton onClick={removeTask} color={'primary'}>
                     <Delete/>
                 </IconButton>
             </li>
         )
     })
+
 
     return (
         <div className="App">
@@ -87,9 +74,9 @@ export function ToDoList(props: PropsType) {
                         <Delete/>
                     </IconButton>
                 </h3>
-                <AddItemForm addItem={addItem}/>
-                <ul style={{listStyle: 'none', padding:'0'}}>
-                    {CurrentTasks}
+                <AddItemForm addItem={addTask}/>
+                <ul style={{listStyle: 'none', padding: '0'}}>
+                    {currentTasks}
                 </ul>
                 <div>
                     <Button
