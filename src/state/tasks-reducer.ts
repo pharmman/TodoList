@@ -3,14 +3,16 @@ import {v1} from 'uuid';
 import {AddTodolistActionType, RemoveTodolistActionType} from './todolist-reducer';
 
 type ActionType =
-    ReturnType<typeof deleteTaskAC>
+    ReturnType<typeof removeTaskAC>
     | ReturnType<typeof addTaskAC>
     | ReturnType<typeof changeTaskStatusAC>
     | ReturnType<typeof changeTaskTitleAC>
     | AddTodolistActionType
     | RemoveTodolistActionType
 
-export const tasksReducer = (state: TasksStateType, action: ActionType): TasksStateType => {
+const initialState: TasksStateType = {}
+
+export const tasksReducer = (state = initialState , action: ActionType): TasksStateType => {
     switch (action.type) {
         case 'DELETE-TASK':
             return {
@@ -49,11 +51,11 @@ export const tasksReducer = (state: TasksStateType, action: ActionType): TasksSt
                 ...state,
             }
         default:
-            throw new Error('I don\'t understand this type');
+            return state;
     }
 }
 
-export const deleteTaskAC = (taskID: string, todolistID: string) => ({type: 'DELETE-TASK', taskID, todolistID} as const)
+export const removeTaskAC = (taskID: string, todolistID: string) => ({type: 'DELETE-TASK', taskID, todolistID} as const)
 export const addTaskAC = (todolistID: string, title: string) => ({
     type: 'ADD-TASK',
     todolistID,

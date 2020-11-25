@@ -1,5 +1,5 @@
 import {TasksStateType} from '../App';
-import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, deleteTaskAC, tasksReducer} from './tasks-reducer';
+import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, tasksReducer} from './tasks-reducer';
 import {addTodoListAC, removeTodoListAC} from './todolist-reducer';
 
 let startState: TasksStateType;
@@ -20,7 +20,7 @@ beforeEach(() => {
 
 test('correct task should be deleted from correct todolist', () => {
 
-    const action = deleteTaskAC('2', 'todolistId2');
+    const action = removeTaskAC('2', 'todolistId2');
     const endState = tasksReducer(startState, action)
 
     expect(endState['todolistId1'].length).toBe(3)
