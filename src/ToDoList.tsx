@@ -1,47 +1,68 @@
 import React, {ChangeEvent} from 'react';
-import {FilterValuesType, TaskType} from './App'
+import {FilterValuesType, TaskType} from './AppWithRedux'
 import {AddItemForm} from './AddItemForm';
 import {EditableSpan} from './EditableSpan';
 import {Button, Checkbox, IconButton} from '@material-ui/core';
 import {Delete} from '@material-ui/icons';
+import {useDispatch, useSelector} from 'react-redux';
+import {AppRootStateType} from './state/store';
+import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC} from './state/tasks-reducer';
 
 type PropsType = {
     id: string
     filter: FilterValuesType
     title: string,
-    tasks: Array<TaskType>
-    removeTask: (taskID: string, todoListID: string) => void
     changeFilter: (value: FilterValuesType, todolistID: string) => void
-    addTask: (taskTitle: string, todoListID: string) => void
-    changeTaskStatus: (taskID: string, isDone: boolean, todoListID: string) => void
     removeTodoList: (todoListID: string) => void
-    changeTaskTitle: (taskID: string, title: string, todoListID: string) => void
     changeTodoListTitle: (todoListId: string, title: string) => void
 }
 
 export function ToDoList(props: PropsType) {
+    let tasks = useSelector<AppRootStateType, Array<TaskType>>(state => state.tasks[props.id])
+    const dispatch = useDispatch();
 
+    function addTask(taskTitle: string, todoListID: string) {
+        dispatch(addTaskAC(todoListID, taskTitle))
+    }
+
+    function removeTask(taskID: string, todoListID: string) {
+        dispatch(removeTaskAC(taskID, todoListID))
+    }
+
+    function changeTaskStatus(taskID: string, isDone: boolean, todoListID: string) {
+        dispatch(changeTaskStatusAC(todoListID, taskID, isDone))
+    }
+
+    function changeTaskTitle(taskID: string, title: string, todoListID: string) {
+        dispatch(changeTaskTitleAC(todoListID, taskID, title))
+    }
+
+    if (props.filter === 'active') {
+        tasks = tasks.filter(t => !t.isDone);
+    }
+    if (props.filter === 'completed') {
+        tasks = tasks.filter(t => t.isDone);
+    }
 
     const onSetAllFilterClick = () => props.changeFilter('all', props.id);
     const onSetActiveFilterClick = () => props.changeFilter('active', props.id);
     const onSetCompletedFilterClick = () => props.changeFilter('completed', props.id);
     const deleteTodoList = () => props.removeTodoList(props.id);
-    const addTask = (title: string) => {
-        debugger
-        props.addTask(title, props.id);
+    const addItem = (title: string) => {
+        addTask(title, props.id);
     }
     const changeTodoListTitle = (title: string) => {
         props.changeTodoListTitle(props.id, title)
     }
 
 
-    const tasks = props.tasks.map(t => {
-        const removeTask = () => props.removeTask(t.id, props.id);
+    const CurrentTasks = tasks.map(t => {
+        const removeCurrentTask = () => removeTask(t.id, props.id);
         const changeTitle = (title: string) => {
-            props.changeTaskTitle(t.id, title, props.id)
+            changeTaskTitle(t.id, title, props.id)
         }
         const changeStatus = (e: ChangeEvent<HTMLInputElement>) => {
-            props.changeTaskStatus(t.id, e.currentTarget.checked, props.id)
+            changeTaskStatus(t.id, e.currentTarget.checked, props.id)
         };
         return (
             <li style={{marginLeft: '0'}} key={t.id} className={t.isDone ? 'is-done' : ''}>
@@ -51,7 +72,7 @@ export function ToDoList(props: PropsType) {
                     color={'primary'}
                 />
                 <EditableSpan changeTitle={changeTitle} title={t.title}/>
-                <IconButton onClick={removeTask} color={'primary'}>
+                <IconButton onClick={removeCurrentTask} color={'primary'}>
                     <Delete/>
                 </IconButton>
             </li>
@@ -66,9 +87,9 @@ export function ToDoList(props: PropsType) {
                         <Delete/>
                     </IconButton>
                 </h3>
-                <AddItemForm addItem={addTask}/>
+                <AddItemForm addItem={addItem}/>
                 <ul style={{listStyle: 'none', padding:'0'}}>
-                    {tasks}
+                    {CurrentTasks}
                 </ul>
                 <div>
                     <Button
