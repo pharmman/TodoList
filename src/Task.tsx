@@ -16,11 +16,11 @@ export const Task: React.FC<TaskPropsType> = React.memo(({
                                                              changeTitle,
                                                              changeStatus
                                                          }) => {
-    const localChangeStatus = (e: ChangeEvent<HTMLInputElement>) => changeStatus(e, task.id)
-    const localChangeTitle = useCallback((title: string) => changeTitle(title, task.id), [task.id])
-    const localRemoveTask = () => removeTask(task.id)
+    const localChangeStatus = useCallback ( (e: ChangeEvent<HTMLInputElement>) => changeStatus(e, task.id), [changeStatus, task.id])
+    const localChangeTitle = useCallback((title: string) => changeTitle(title, task.id), [task.id, changeTitle])
+    const localRemoveTask = useCallback ( () => removeTask(task.id), [removeTask, task.id])
     return (
-        <li style={{marginLeft: '0'}} key={task.id} className={task.isDone ? 'is-done' : ''}>
+        <li style={{marginLeft: '0'}} className={task.isDone ? 'is-done' : ''}>
             <Checkbox
                 onChange={localChangeStatus}
                 checked={task.isDone}
