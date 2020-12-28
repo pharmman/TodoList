@@ -2,11 +2,12 @@ import React, {ChangeEvent, useCallback} from 'react';
 import {FilterValuesType, TaskType} from './AppWithRedux'
 import {AddItemForm} from './AddItemForm';
 import {EditableSpan} from './EditableSpan';
-import {Button, Checkbox, IconButton} from '@material-ui/core';
+import {Button, IconButton} from '@material-ui/core';
 import {Delete} from '@material-ui/icons';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppRootStateType} from './state/store';
 import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC} from './state/tasks-reducer';
+import {Task} from './Task';
 
 type TodoListPropsType = {
     todoListId: string
@@ -52,31 +53,22 @@ export const ToDoList: React.FC<TodoListPropsType> = React.memo(({
     const localChangeTodoListTitle = (title: string) => {
         changeTodoListTitle(todoListId, title)
     }
+    const removeTask = useCallback((taskId: string) => dispatch(removeTaskAC(taskId, todoListId)), [todoListId, dispatch]);
+    const changeTitle = useCallback((title: string, taskId: string) => {
+        dispatch(changeTaskTitleAC(todoListId, taskId, title))
+    }, [todoListId, dispatch])
+    const changeStatus = useCallback((e: ChangeEvent<HTMLInputElement>, taskId: string) => {
+        dispatch(changeTaskStatusAC(todoListId, taskId, e.currentTarget.checked))
+    }, [todoListId, dispatch]);
 
 
     const currentTasks = tasksForTodoList.map(t => {
-        const removeTask = () => dispatch(removeTaskAC(t.id, todoListId));
-        const changeTitle = (title: string) => {
-            dispatch(changeTaskTitleAC(todoListId, t.id, title))
-        }
-        const changeStatus = (e: ChangeEvent<HTMLInputElement>) => {
-            dispatch(changeTaskStatusAC(todoListId, t.id, e.currentTarget.checked))
-        };
         return (
-            <li style={{marginLeft: '0'}} key={t.id} className={t.isDone ? 'is-done' : ''}>
-                <Checkbox
-                    onChange={changeStatus}
-                    checked={t.isDone}
-                    color={'primary'}
-                />
-                <EditableSpan changeTitle={changeTitle} title={t.title}/>
-                <IconButton onClick={removeTask} color={'primary'}>
-                    <Delete/>
-                </IconButton>
-            </li>
+            <span key={t.id}>
+                <Task key={t.id} task={t} removeTask={removeTask} changeTitle={changeTitle} changeStatus={changeStatus}/>
+            </span>
         )
     })
-
 
     return (
         <div className="App">
@@ -117,3 +109,4 @@ export const ToDoList: React.FC<TodoListPropsType> = React.memo(({
         </div>
     )
 })
+
