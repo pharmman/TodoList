@@ -14,3 +14,4 @@ export type AppRootStateType = ReturnType<typeof rootReducers>
 
 // @ts-ignore
 window.store = store
+bla
