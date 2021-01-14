@@ -4,39 +4,33 @@ import {ToDoList} from './ToDoList';
 import {AddItemForm} from './AddItemForm';
 import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from '@material-ui/core';
 import {Menu} from '@material-ui/icons';
-import {addTodoListAC, changeTodoListFilterAC, changeTodoListTitleAC, removeTodoListAC} from './state/todolist-reducer';
+import {
+    addTodoListAC,
+    changeTodoListFilterAC,
+    changeTodoListTitleAC,
+    FilterValuesType,
+    removeTodoListAC, TodolistDomainType
+} from './state/todolist-reducer';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppRootStateType} from './state/store';
-
-export type TaskType = {
-    id: string,
-    title: string,
-    isDone: boolean,
-}
-export type TodoListType = {
-    id: string
-    title: string
-    filter: FilterValuesType
-}
+import {TaskType} from './api/todolistsAPI';
 
 export type TasksStateType = {
     [key: string]: Array<TaskType>
 }
 
-export type FilterValuesType = 'all' | 'active' | 'completed'
-
 function AppWithRedux() {
 
     const dispatch = useDispatch();
-    const todoLists = useSelector<AppRootStateType, Array<TodoListType>>(state => state.todoLists)
+    const todoLists = useSelector<AppRootStateType, Array<TodolistDomainType>>(state => state.todoLists)
 
 
-    const changeFilter = useCallback ( (value: FilterValuesType, todoListID: string) => {
+    const changeFilter = useCallback((value: FilterValuesType, todoListID: string) => {
         dispatch(changeTodoListFilterAC(value, todoListID))
     }, [dispatch])
 
 
-    const removeTodoList = useCallback ( (todoListID: string) => {
+    const removeTodoList = useCallback((todoListID: string) => {
         dispatch(removeTodoListAC(todoListID))
     }, [dispatch])
 
@@ -44,7 +38,7 @@ function AppWithRedux() {
         dispatch(addTodoListAC(title))
     }, [dispatch])
 
-    const changeTodoListTitle = useCallback ( (todoListId: string, title: string) => {
+    const changeTodoListTitle = useCallback((todoListId: string, title: string) => {
         dispatch(changeTodoListTitleAC(todoListId, title))
     }, [dispatch])
 

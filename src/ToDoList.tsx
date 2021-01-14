@@ -1,5 +1,4 @@
 import React, {ChangeEvent, useCallback} from 'react';
-import {FilterValuesType, TaskType} from './AppWithRedux'
 import {AddItemForm} from './AddItemForm';
 import {EditableSpan} from './EditableSpan';
 import {Button, IconButton} from '@material-ui/core';
@@ -8,6 +7,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import {AppRootStateType} from './state/store';
 import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC} from './state/tasks-reducer';
 import {Task} from './Task';
+import {FilterValuesType} from './state/todolist-reducer';
+import {TaskStatuses, TaskType} from './api/todolistsAPI';
 
 type TodoListPropsType = {
     todoListId: string
@@ -33,10 +34,10 @@ export const ToDoList: React.FC<TodoListPropsType> = React.memo(({
     let tasksForTodoList: Array<TaskType> = tasks
 
     if (filter === 'active') {
-        tasksForTodoList = tasks.filter(t => !t.isDone);
+        tasksForTodoList = tasks.filter(t => t.status !== TaskStatuses.Completed);
     }
     if (filter === 'completed') {
-        tasksForTodoList = tasks.filter(t => t.isDone);
+        tasksForTodoList = tasks.filter(t => t.status === TaskStatuses.Completed);
     }
 
     const onSetAllFilterClick = useCallback(
@@ -50,7 +51,7 @@ export const ToDoList: React.FC<TodoListPropsType> = React.memo(({
     const addTask = useCallback((title: string) => {
         dispatch(addTaskAC(todoListId, title))
     }, [todoListId, dispatch])
-    const localChangeTodoListTitle = useCallback ( (title: string) => {
+    const localChangeTodoListTitle = useCallback((title: string) => {
         changeTodoListTitle(todoListId, title)
     }, [todoListId, changeTodoListTitle])
     const removeTask = useCallback((taskId: string) => dispatch(removeTaskAC(taskId, todoListId)), [todoListId, dispatch]);
@@ -58,7 +59,7 @@ export const ToDoList: React.FC<TodoListPropsType> = React.memo(({
         dispatch(changeTaskTitleAC(todoListId, taskId, title))
     }, [todoListId, dispatch])
     const changeStatus = useCallback((e: ChangeEvent<HTMLInputElement>, taskId: string) => {
-        dispatch(changeTaskStatusAC(todoListId, taskId, e.currentTarget.checked))
+        dispatch(changeTaskStatusAC(todoListId, taskId, e.currentTarget.checked ? TaskStatuses.Completed : TaskStatuses.New))
     }, [todoListId, dispatch]);
 
 
