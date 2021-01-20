@@ -1,11 +1,16 @@
-import React, {ChangeEvent, useCallback} from 'react';
+import React, {ChangeEvent, useCallback, useEffect} from 'react';
 import {AddItemForm} from './AddItemForm';
 import {EditableSpan} from './EditableSpan';
 import {Button, IconButton} from '@material-ui/core';
 import {Delete} from '@material-ui/icons';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppRootStateType} from './state/store';
-import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC} from './state/tasks-reducer';
+import {
+    createTaskTC,
+    getTasks,
+    removeTaskTC,
+    updateTaskTC
+} from './state/tasks-reducer';
 import {Task} from './Task';
 import {FilterValuesType} from './state/todolist-reducer';
 import {TaskStatuses, TaskType} from './api/todolistsAPI';
@@ -31,6 +36,10 @@ export const ToDoList: React.FC<TodoListPropsType> = React.memo(({
     const tasks = useSelector<AppRootStateType, Array<TaskType>>(state => state.tasks[todoListId])
     const dispatch = useDispatch();
 
+    useEffect(() => {
+        dispatch(getTasks(todoListId))
+    }, [dispatch, todoListId])
+
     let tasksForTodoList: Array<TaskType> = tasks
 
     if (filter === 'active') {
@@ -48,18 +57,26 @@ export const ToDoList: React.FC<TodoListPropsType> = React.memo(({
         () => changeFilter('completed', todoListId), [todoListId, changeFilter]);
 
     const deleteTodoList = () => removeTodoList(todoListId);
+
     const addTask = useCallback((title: string) => {
-        dispatch(addTaskAC(todoListId, title))
+        dispatch(createTaskTC(todoListId, title))
     }, [todoListId, dispatch])
+
     const localChangeTodoListTitle = useCallback((title: string) => {
         changeTodoListTitle(todoListId, title)
     }, [todoListId, changeTodoListTitle])
-    const removeTask = useCallback((taskId: string) => dispatch(removeTaskAC(taskId, todoListId)), [todoListId, dispatch]);
+
+    const removeTask = useCallback((taskId: string) => dispatch(removeTaskTC(todoListId, taskId)), [todoListId, dispatch]);
+
     const changeTitle = useCallback((title: string, taskId: string) => {
-        dispatch(changeTaskTitleAC(todoListId, taskId, title))
+        dispatch(updateTaskTC(todoListId, taskId, {title: title}))
     }, [todoListId, dispatch])
+
     const changeStatus = useCallback((e: ChangeEvent<HTMLInputElement>, taskId: string) => {
-        dispatch(changeTaskStatusAC(todoListId, taskId, e.currentTarget.checked ? TaskStatuses.Completed : TaskStatuses.New))
+        dispatch(updateTaskTC(todoListId, taskId, e.currentTarget.checked ?
+            {status:TaskStatuses.Completed}
+            :
+            {status:TaskStatuses.New}))
     }, [todoListId, dispatch]);
 
 

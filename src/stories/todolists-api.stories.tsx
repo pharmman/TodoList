@@ -176,7 +176,6 @@ export const UpdateTask = () => {
         APITasks.updateTask(todolistId,taskId,{
             title,
             description,
-            completed,
             status,
             startDate,
             deadline,

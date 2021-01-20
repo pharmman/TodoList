@@ -15,7 +15,8 @@ const initialState:AppRootStateType = {
     ] ,
     tasks: {
         ["todolistId1"]: [
-            {id: v1(), title: "HTML&CSS", status: TaskStatuses.Completed,  addedDate: '',
+            {id: v1(), title: "HTML&CSS",
+                status: TaskStatuses.Completed,  addedDate: '',
                 deadline: '',
                 description: '',
                 order: 1,
