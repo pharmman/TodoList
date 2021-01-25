@@ -1,9 +1,11 @@
 import React, {ChangeEvent, useState} from 'react';
 import {TextField} from '@material-ui/core';
+import {EntityStatusType} from '../features/TodolistsList/Todolist/todolist-reducer';
 
 export type EditableSpanPropsType = {
     title: string
     changeTitle: (title:string) => void
+    entityStatus?: EntityStatusType
 }
 
 export const EditableSpan = React.memo ( (props: EditableSpanPropsType) => {
@@ -24,8 +26,8 @@ export const EditableSpan = React.memo ( (props: EditableSpanPropsType) => {
     const [editMode, setEditMode] = useState<boolean>(false);
     const [title, setTitle] = useState(props.title)
     return (editMode ?
-            <TextField onBlur={offEditMode} onChange={onChangeTitle} autoFocus value={title} />
+            <TextField onBlur={offEditMode} onChange={onChangeTitle} autoFocus value={title}/>
             :
-            <span onDoubleClick={onEditMode}>{props.title}</span>
+            <span onDoubleClick={props.entityStatus === 'loading'? () =>{} : onEditMode}>{props.title}</span>
     )
 })

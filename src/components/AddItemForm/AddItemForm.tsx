@@ -1,9 +1,11 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
 import {IconButton, TextField} from '@material-ui/core';
 import {AddBox} from '@material-ui/icons';
+import {EntityStatusType} from '../features/TodolistsList/Todolist/todolist-reducer';
 
 export type AddItemFormPropsType = {
     addItem: (title: string) => void
+    entityStatus?: EntityStatusType
 }
 
 export const AddItemForm = React.memo ( function (props: AddItemFormPropsType) {
@@ -34,11 +36,6 @@ export const AddItemForm = React.memo ( function (props: AddItemFormPropsType) {
     }
     return (
         <div>
-            {/*<input value={title}
-                   onChange={onchangeTitleHandler}
-                   onKeyPress={onKeyPressEnterHandler}
-                   className={error ? 'error' : ''}
-            />*/}
             <TextField variant={'outlined'}
                        value={title}
                        onChange={onchangeTitleHandler}
@@ -46,11 +43,11 @@ export const AddItemForm = React.memo ( function (props: AddItemFormPropsType) {
                        error={!!error}
                        label={'Title'}
                        helperText={error}
+                       disabled={props.entityStatus === 'loading'}
             />
-            <IconButton color={'primary'} onClick={addItem}>
+            <IconButton color={'primary'} onClick={addItem}  disabled={props.entityStatus === 'loading'}>
                 <AddBox/>
             </IconButton>
-            {/*{error && <div className={'error-message'}>{error}</div>}*/}
         </div>
     )
 })

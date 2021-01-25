@@ -13,6 +13,7 @@ import {
 import {Grid, Paper} from '@material-ui/core';
 import {AddItemForm} from '../../AddItemForm/AddItemForm';
 import {ToDoList} from './Todolist/ToDoList';
+import {ErrorSnackbar} from '../../ErrorSnackbar/ErrorSnackbar';
 
 export const TodolistsList: React.FC = () => {
     const dispatch = useDispatch();
@@ -21,7 +22,6 @@ export const TodolistsList: React.FC = () => {
     useEffect(() => {
         dispatch(getTodolists())
     }, [])
-
 
     const changeFilter = useCallback((value: FilterValuesType, todoListID: string) => {
         dispatch(changeTodoListFilterAC(value, todoListID))
@@ -57,12 +57,14 @@ export const TodolistsList: React.FC = () => {
                                     changeFilter={changeFilter}
                                     removeTodoList={removeTodoList}
                                     changeTodoListTitle={changeTodoListTitle}
+                                    entityStatus={tl.entityStatus}
                                 />
                             </Paper>
                         </Grid>
                     )
                 })
             }
+            <ErrorSnackbar/>
         </Grid>
     </>
 }

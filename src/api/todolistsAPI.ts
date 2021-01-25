@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {EntityStatusType} from '../components/features/TodolistsList/Todolist/todolist-reducer';
 
 const instance = axios.create({
     baseURL: 'https://social-network.samuraijs.com/api/1.1/',
@@ -24,6 +25,12 @@ export enum TaskPriorities {
     Later = 4
 }
 
+export enum ResultCodes {
+    Success = 0,
+    Error = 1,
+    Captcha = 10
+}
+
 export type TodolistType = {
     id: string,
     addedDate: string,
@@ -42,6 +49,7 @@ export type TaskType = {
     todoListId: string
     order: number
     addedDate: string
+    entityStatus?: EntityStatusType
 }
 
 type ResponseTodolistType<T = {}> = {
@@ -57,7 +65,7 @@ type GetTaskResponseType = {
     error: string
 }
 
-type ResponseTaskType<T = {}> = {
+export type ResponseTaskType<T = {}> = {
     data: T,
     resultCode: number,
     messages: string[]

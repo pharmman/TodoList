@@ -5,14 +5,9 @@ import {Button, IconButton} from '@material-ui/core';
 import {Delete} from '@material-ui/icons';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppRootStateType} from '../../../App/store';
-import {
-    createTaskTC,
-    getTasks,
-    removeTaskTC,
-    updateTaskTC
-} from './tasks-reducer';
+import {createTaskTC, getTasks, removeTaskTC, updateTaskTC} from './tasks-reducer';
 import {Task} from './Task/Task';
-import {FilterValuesType} from './todolist-reducer';
+import {EntityStatusType, FilterValuesType} from './todolist-reducer';
 import {TaskStatuses, TaskType} from '../../../../api/todolistsAPI';
 
 type TodoListPropsType = {
@@ -22,6 +17,7 @@ type TodoListPropsType = {
     changeFilter: (value: FilterValuesType, todolistID: string) => void
     removeTodoList: (todoListID: string) => void
     changeTodoListTitle: (todoListId: string, title: string) => void
+    entityStatus: EntityStatusType
 }
 
 export const ToDoList: React.FC<TodoListPropsType> = React.memo(({
@@ -30,7 +26,8 @@ export const ToDoList: React.FC<TodoListPropsType> = React.memo(({
                                                                      title,
                                                                      changeFilter,
                                                                      removeTodoList,
-                                                                     changeTodoListTitle
+                                                                     changeTodoListTitle,
+                                                                     entityStatus
                                                                  }) => {
     console.log('ToDoList called')
     const tasks = useSelector<AppRootStateType, Array<TaskType>>(state => state.tasks[todoListId])
@@ -74,16 +71,16 @@ export const ToDoList: React.FC<TodoListPropsType> = React.memo(({
 
     const changeStatus = useCallback((e: ChangeEvent<HTMLInputElement>, taskId: string) => {
         dispatch(updateTaskTC(todoListId, taskId, e.currentTarget.checked ?
-            {status:TaskStatuses.Completed}
+            {status: TaskStatuses.Completed}
             :
-            {status:TaskStatuses.New}))
+            {status: TaskStatuses.New}))
     }, [todoListId, dispatch]);
 
 
     const currentTasks = tasksForTodoList.map(t => {
         return (
             <span key={t.id}>
-                <Task task={t} removeTask={removeTask} changeTitle={changeTitle} changeStatus={changeStatus}/>
+                <Task entityStatus={t.entityStatus} task={t} removeTask={removeTask} changeTitle={changeTitle} changeStatus={changeStatus}/>
             </span>
         )
     })
@@ -91,12 +88,12 @@ export const ToDoList: React.FC<TodoListPropsType> = React.memo(({
     return (
         <div className="App">
             <div>
-                <h3><EditableSpan title={title} changeTitle={localChangeTodoListTitle}/>
-                    <IconButton onClick={deleteTodoList} color={'primary'}>
+                <h3><EditableSpan title={title} changeTitle={localChangeTodoListTitle} entityStatus={entityStatus}/>
+                    <IconButton onClick={deleteTodoList} color={'primary'} disabled={entityStatus === 'loading'}>
                         <Delete/>
                     </IconButton>
                 </h3>
-                <AddItemForm addItem={addTask}/>
+                <AddItemForm addItem={addTask} entityStatus={entityStatus}/>
                 <ul style={{listStyle: 'none', padding: '0'}}>
                     {currentTasks}
                 </ul>
