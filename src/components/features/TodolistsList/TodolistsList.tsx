@@ -51,13 +51,10 @@ export const TodolistsList: React.FC = () => {
                             <Paper elevation={3} style={{padding: '15px'}}>
                                 <ToDoList
                                     key={tl.id}
-                                    todoListId={tl.id}
-                                    title={tl.title}
-                                    filter={tl.filter}
                                     changeFilter={changeFilter}
                                     removeTodoList={removeTodoList}
                                     changeTodoListTitle={changeTodoListTitle}
-                                    entityStatus={tl.entityStatus}
+                                    todolist={tl}
                                 />
                             </Paper>
                         </Grid>
