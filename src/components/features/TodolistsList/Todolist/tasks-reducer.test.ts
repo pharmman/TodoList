@@ -1,4 +1,12 @@
-import {addTaskAC, updateTaskAC, removeTaskAC, setTasks, tasksReducer, TasksStateType} from './tasks-reducer';
+import {
+    addTaskAC,
+    removeTaskAC,
+    setTaskEntityStatus,
+    setTasks,
+    tasksReducer,
+    TasksStateType,
+    updateTaskAC
+} from './tasks-reducer';
 import {addTodoListAC, removeTodoListAC, setTodolists} from './todolist-reducer';
 import {TaskPriorities, TaskStatuses} from '../../../../api/todolistsAPI';
 
@@ -286,7 +294,7 @@ test('status of specified task should be changed', () => {
 
 test('title specify task should be changed', () => {
 
-    const action = updateTaskAC('todolistId1', '1', {title:'Redux'})
+    const action = updateTaskAC('todolistId1', '1', {title: 'Redux'})
     const endState = tasksReducer(startState, action)
 
     expect(endState).toEqual({
@@ -353,7 +361,7 @@ test('title specify task should be changed', () => {
 
 test('new array should be added when new todolist is added', () => {
 
-    const action = addTodoListAC( {id: 'todolistId3', title: 'What to learn', addedDate: '', order: 1});
+    const action = addTodoListAC({id: 'todolistId3', title: 'What to learn', addedDate: '', order: 1});
 
     const endState = tasksReducer(startState, action)
 
@@ -408,4 +416,16 @@ test('tasks should be setted to todolists', () => {
     expect(endState['todolistId1'].length).toBe(3)
     expect(endState['todolistId2'].length).toBe(0)
 
+})
+
+test('entity status should be added to correct task', () => {
+    const action = setTaskEntityStatus('loading', 'todolistId2', '1')
+    const endState = tasksReducer(startState, action)
+
+    const currentTask = endState[action.todolistId].find(t => t.id === action.taskId)
+    const anotherTask = endState['todolistId1'].find(t => t.id === action.taskId)
+    if (currentTask && anotherTask) {
+        expect(anotherTask.entityStatus).toBeUndefined()
+        expect(currentTask.entityStatus).toBe('loading')
+    }
 })

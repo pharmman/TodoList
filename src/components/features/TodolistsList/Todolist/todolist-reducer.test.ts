@@ -1,12 +1,13 @@
 import {
     addTodoListAC,
     FilterValuesType,
-    removeTodoListAC,
+    removeTodoListAC, setTodolistEntityStatus,
     setTodolists,
     TodolistDomainType,
     todoListReducer
 } from './todolist-reducer';
 import {v1} from 'uuid';
+import {setTaskEntityStatus, tasksReducer} from './tasks-reducer';
 
 let startState: Array<TodolistDomainType>
 let todolistId1: string;
@@ -82,6 +83,14 @@ test('todolists should be set to state', () => {
 
     expect(endState).toEqual(startState)
 });
+
+test('entity status should be added to correct todolist', () => {
+    const action = setTodolistEntityStatus('loading', todolistId1)
+    const endState = todoListReducer(startState, action)
+
+    expect(endState[0].entityStatus).toBe('loading')
+    expect(endState[1].entityStatus).toBe('idle')
+})
 
 
 
