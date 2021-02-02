@@ -65,10 +65,16 @@ type GetTaskResponseType = {
     error: string
 }
 
-export type ResponseTaskType<T = {}> = {
+export type ResponseType<T = {}> = {
     data: T,
     resultCode: number,
     messages: string[]
+}
+
+export type LoginRequestPayloadType = {
+    email: string,
+    password: string,
+    rememberMe: boolean
 }
 
 type UpdateTaskModelType = {
@@ -101,12 +107,24 @@ export const APITasks = {
         return instance.get<GetTaskResponseType>(`todo-lists/${id}/tasks`)
     },
     createTask(data: { id: string, title: string }) {
-        return instance.post<ResponseTaskType<{ item: TaskType }>>(`todo-lists/${data.id}/tasks`, {title: data.title})
+        return instance.post<ResponseType<{ item: TaskType }>>(`todo-lists/${data.id}/tasks`, {title: data.title})
     },
     deleteTask(todolistId: string, taskId: string) {
-        return instance.delete<ResponseTaskType>(`todo-lists/${todolistId}/tasks/${taskId}`)
+        return instance.delete<ResponseType>(`todo-lists/${todolistId}/tasks/${taskId}`)
     },
     updateTask(todolistId: string, taskId: string, data: UpdateTaskModelType) {
-        return instance.put<ResponseTaskType<{ item: TaskType }>>(`todo-lists/${todolistId}/tasks/${taskId}`, data)
+        return instance.put<ResponseType<{ item: TaskType }>>(`todo-lists/${todolistId}/tasks/${taskId}`, data)
+    }
+}
+
+export const authAPI = {
+    me() {
+        return instance.get<ResponseType<{ id: number, email: string, login: string }>>(`auth/me`)
+    },
+    login(data: LoginRequestPayloadType) {
+        return instance.post<ResponseType<{userId: number}>>('auth/login', data)
+    },
+    logOut() {
+        return instance.delete<ResponseType>('auth/login')
     }
 }

@@ -13,13 +13,18 @@ import {
 import {Grid, Paper} from '@material-ui/core';
 import {AddItemForm} from '../../AddItemForm/AddItemForm';
 import {ToDoList} from './Todolist/ToDoList';
-import {ErrorSnackbar} from '../../ErrorSnackbar/ErrorSnackbar';
+import {Redirect} from 'react-router-dom';
 
 export const TodolistsList: React.FC = () => {
     const dispatch = useDispatch();
     const todoLists = useSelector<AppRootStateType, Array<TodolistDomainType>>(state => state.todoLists)
+    const isLoggedIn = useSelector<AppRootStateType, boolean>(state => state.auth.isLogged)
+
 
     useEffect(() => {
+        if (!isLoggedIn) {
+            return
+        }
         dispatch(getTodolists())
     }, [])
 
@@ -39,6 +44,11 @@ export const TodolistsList: React.FC = () => {
     const changeTodoListTitle = useCallback((todoListId: string, title: string) => {
         dispatch(changeTodolistTitleTC(todoListId, title))
     }, [dispatch])
+
+
+    if (!isLoggedIn) {
+        return <Redirect to={'/login'}/>
+    }
     return <>
         <Grid container style={{padding: '15px'}}>
             <AddItemForm addItem={addTodoList}/>
@@ -61,7 +71,7 @@ export const TodolistsList: React.FC = () => {
                     )
                 })
             }
-            <ErrorSnackbar/>
+
         </Grid>
     </>
 }

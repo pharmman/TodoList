@@ -1,8 +1,9 @@
 import {Dispatch} from 'redux';
-import {ResponseTaskType} from '../api/todolistsAPI'
+import {ResponseType} from '../api/todolistsAPI'
 import {setAppError, setAppStatus} from '../components/App/app-reducer';
 
-export const handleServerAppError = <T>(data: ResponseTaskType<T>, dispatch:Dispatch) => {
+export const handleServerAppError = <T>(data: ResponseType<T>, dispatch:Dispatch) => {
+    debugger
     if (data.messages.length > 0) {
         dispatch(setAppError(data.messages[0]))
     } else {

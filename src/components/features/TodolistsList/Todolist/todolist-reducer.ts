@@ -4,6 +4,7 @@ import {ThunkAction} from 'redux-thunk';
 import {AppRootStateType} from '../../../App/store';
 import {AppActionsType, setAppError, setAppStatus} from '../../../App/app-reducer';
 import {handleServerAppError, handleServerNetworkError} from '../../../../utils/error-utils';
+import {AuthActionsType} from '../../Login/auth-reducer';
 
 //types
 export type FilterValuesType = 'all' | 'active' | 'completed'
@@ -26,7 +27,7 @@ type ActionTodolistType =
     | setTodlistsType
     | ReturnType<typeof setTodolistEntityStatus>
 
-export type CommonActionTypes = ActionTodolistType | ActionTasksType | AppActionsType
+export type CommonActionTypes = ActionTodolistType | ActionTasksType | AppActionsType | AuthActionsType
 export type ThunkType = ThunkAction<void, AppRootStateType, unknown, CommonActionTypes>
 
 const initialState: Array<TodolistDomainType> = []
