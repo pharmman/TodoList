@@ -1,36 +1,34 @@
-import {ThunkType} from '../TodolistsList/Todolist/todolist-reducer';
 import {setAppStatus, setInitializeApp} from '../../App/app-reducer';
 import {authAPI, LoginRequestPayloadType, ResultCodes} from '../../../api/todolistsAPI';
 import {handleServerAppError} from '../../../utils/error-utils';
+import {Dispatch} from 'redux';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-type AuthReducerInitialStateType = {
-    isLogged: boolean
-}
-
-export type AuthActionsType = ReturnType<typeof setIsLogged>
-
-const initialState: AuthReducerInitialStateType = {
+const initialState = {
     isLogged: false
 }
 
-export const authReducer = (state: AuthReducerInitialStateType = initialState, action: AuthActionsType): AuthReducerInitialStateType => {
-    switch (action.type) {
-        case 'SET-IS-LOGGED':
-            return {...state, isLogged: action.isLogged}
-        default:
-            return state
+const slice = createSlice({
+    name: 'auth',
+    initialState: initialState,
+    reducers: {
+        setIsLogged: (state, action: PayloadAction<{ isLogged: boolean }>) => {
+            state.isLogged = action.payload.isLogged
+        }
     }
-}
+})
 
-const setIsLogged = (isLogged: boolean) => ({type: 'SET-IS-LOGGED', isLogged} as const)
+export const authReducer = slice.reducer
+export const {setIsLogged} = slice.actions
 
-export const login = (data: LoginRequestPayloadType): ThunkType => async (dispatch) => {
-    dispatch(setAppStatus('loading'))
+
+export const login = (data: LoginRequestPayloadType) => async (dispatch: Dispatch) => {
+    dispatch(setAppStatus({status: 'loading'}))
     try {
         let res = await authAPI.login(data)
         if (res.data.resultCode === ResultCodes.Success) {
-            dispatch(setIsLogged(true))
-            dispatch(setAppStatus('succeeded'))
+            dispatch(setIsLogged({isLogged: true}))
+            dispatch(setAppStatus({status: 'succeeded'}))
         } else {
             handleServerAppError<{ userId: number }>(res.data, dispatch)
         }
@@ -39,13 +37,13 @@ export const login = (data: LoginRequestPayloadType): ThunkType => async (dispat
     }
 }
 
-export const logOut = (): ThunkType => async (dispatch) => {
-    dispatch(setAppStatus('loading'))
+export const logOut = () => async (dispatch: Dispatch) => {
+    dispatch(setAppStatus({status: 'loading'}))
     try {
         let res = await authAPI.logOut()
         if (res.data.resultCode === ResultCodes.Success) {
-            dispatch(setIsLogged(false))
-            dispatch(setAppStatus('succeeded'))
+            dispatch(setIsLogged({isLogged: false}))
+            dispatch(setAppStatus({status: 'succeeded'}))
         } else {
             handleServerAppError(res.data, dispatch)
         }
@@ -54,12 +52,12 @@ export const logOut = (): ThunkType => async (dispatch) => {
     }
 }
 
-export const initializeApp = (): ThunkType => async (dispatch) => {
+export const initializeApp = () => async (dispatch: Dispatch) => {
     try {
         const res = await authAPI.me()
         if (res.data.resultCode === ResultCodes.Success) {
-            dispatch(setIsLogged(true))
-            dispatch(setAppStatus('succeeded'))
+            dispatch(setIsLogged({isLogged: true}))
+            dispatch(setAppStatus({status: 'succeeded'}))
         } else {
         }
     } catch (err) {
