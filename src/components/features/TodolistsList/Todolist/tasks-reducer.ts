@@ -67,7 +67,7 @@ const slice = createSlice({
 
 export const tasksReducer = slice.reducer
 //actions
-const {setTaskEntityStatus, setTasks, updateTaskAC, addTaskAC, removeTaskAC} = slice.actions
+export const {setTaskEntityStatus, setTasks, updateTaskAC, addTaskAC, removeTaskAC} = slice.actions
 
 //thunks
 export const getTasks = (todolistId: string) => (dispatch: Dispatch) => {

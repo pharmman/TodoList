@@ -3,6 +3,7 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed'
 export type AppErrorType = null | string
+export type appReducerInitialState = typeof initialState
 
 export const initialState = {
     status: 'idle' as RequestStatusType,
@@ -20,7 +21,7 @@ const slice = createSlice({
         setAppError: (state, action: PayloadAction<{ error: AppErrorType }>) => {
             state.error = action.payload.error
         },
-        setInitializeApp: (state, action: PayloadAction) => {
+        setInitializeApp: (state) => {
             state.isInitialized = true
         }
     }

@@ -20,8 +20,7 @@ const slice = createSlice({
 
 export const authReducer = slice.reducer
 export const {setIsLogged} = slice.actions
-
-
+//Thunks
 export const login = (data: LoginRequestPayloadType) => async (dispatch: Dispatch) => {
     dispatch(setAppStatus({status: 'loading'}))
     try {

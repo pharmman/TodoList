@@ -1,7 +1,6 @@
+import {appReducer, appReducerInitialState, setAppError, setAppStatus} from './app-reducer';
 
-import {appReducer, InitialAppReducerStateType, setAppError, setAppStatus} from './app-reducer';
-
-let startState: InitialAppReducerStateType;
+let startState: appReducerInitialState;
 beforeEach(() => {
     startState = {
         error: null,
@@ -11,7 +10,7 @@ beforeEach(() => {
 })
 
 test('Status should be set to correct task', () => {
-    const action = setAppStatus('loading')
+    const action = setAppStatus({status: 'loading'})
     const endState = appReducer(startState, action)
 
     expect(endState.error).toBe(null)
@@ -19,7 +18,7 @@ test('Status should be set to correct task', () => {
 })
 
 test('Error should be set to correct task', () => {
-    const action = setAppError('ERROR')
+    const action = setAppError({error: 'ERROR'})
     const endState = appReducer(startState, action)
 
     expect(endState.error).toBe('ERROR')
