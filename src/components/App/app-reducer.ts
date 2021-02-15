@@ -8,7 +8,7 @@ export type appReducerInitialState = typeof initialState
 export const initialState = {
     status: 'idle' as RequestStatusType,
     error: null as AppErrorType,
-    isInitialized: false as boolean
+    isInitialized: false as boolean,
 }
 
 const slice = createSlice({

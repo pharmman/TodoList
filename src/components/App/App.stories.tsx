@@ -10,6 +10,10 @@ export default {
     decorators: [ReduxStoreProviderDecorator],
 } as Meta;
 
-const Template: Story = (args) => <App {...args} />;
+const Template: Story = ( args) => <App {...args} />;
 
 export const AppExample = Template.bind({});
+
+AppExample.args = {
+    demo: true
+}

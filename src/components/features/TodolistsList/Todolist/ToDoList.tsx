@@ -12,6 +12,7 @@ import {TaskStatuses, TaskType} from '../../../../api/todolistsAPI';
 
 type TodoListPropsType = {
     todolist: TodolistDomainType
+    demo: boolean | undefined
     changeFilter: (value: FilterValuesType, todolistID: string) => void
     removeTodoList: (todoListID: string) => void
     changeTodoListTitle: (todoListId: string, title: string) => void
@@ -22,12 +23,16 @@ export const ToDoList: React.FC<TodoListPropsType> = React.memo(({
                                                                      changeFilter,
                                                                      removeTodoList,
                                                                      changeTodoListTitle,
+                                                                     demo
                                                                  }) => {
     console.log('ToDoList called')
     const tasks = useSelector<AppRootStateType, Array<TaskType>>(state => state.tasks[todolist.id])
     const dispatch = useDispatch();
 
     useEffect(() => {
+        if (demo) {
+            return
+        }
         dispatch(getTasks(todolist.id))
     }, [dispatch, todolist.id])
 
@@ -83,8 +88,10 @@ export const ToDoList: React.FC<TodoListPropsType> = React.memo(({
     return (
         <div className="App">
             <div>
-                <h3><EditableSpan title={todolist.title} changeTitle={localChangeTodoListTitle} entityStatus={todolist.entityStatus}/>
-                    <IconButton onClick={deleteTodoList} color={'primary'} disabled={todolist.entityStatus === 'loading'}>
+                <h3><EditableSpan title={todolist.title} changeTitle={localChangeTodoListTitle}
+                                  entityStatus={todolist.entityStatus}/>
+                    <IconButton onClick={deleteTodoList} color={'primary'}
+                                disabled={todolist.entityStatus === 'loading'}>
                         <Delete/>
                     </IconButton>
                 </h3>

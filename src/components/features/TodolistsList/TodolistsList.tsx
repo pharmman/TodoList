@@ -15,14 +15,18 @@ import {AddItemForm} from '../../AddItemForm/AddItemForm';
 import {ToDoList} from './Todolist/ToDoList';
 import {Redirect} from 'react-router-dom';
 
-export const TodolistsList: React.FC = () => {
+type TodolistsListPropsType = {
+    demo?: boolean
+}
+
+export const TodolistsList: React.FC<TodolistsListPropsType> = ({demo}) => {
     const dispatch = useDispatch();
     const todoLists = useSelector<AppRootStateType, Array<TodolistDomainType>>(state => state.todoLists)
     const isLoggedIn = useSelector<AppRootStateType, boolean>(state => state.auth.isLogged)
 
 
     useEffect(() => {
-        if (!isLoggedIn) {
+        if (!isLoggedIn || demo) {
             return
         }
         dispatch(getTodolists())
@@ -65,6 +69,7 @@ export const TodolistsList: React.FC = () => {
                                     removeTodoList={removeTodoList}
                                     changeTodoListTitle={changeTodoListTitle}
                                     todolist={tl}
+                                    demo={demo}
                                 />
                             </Paper>
                         </Grid>

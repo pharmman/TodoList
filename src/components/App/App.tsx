@@ -15,12 +15,16 @@ import {TodolistsList} from '../features/TodolistsList/TodolistsList';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppRootStateType} from './store';
 import {RequestStatusType} from './app-reducer';
-import {BrowserRouter, Route, Redirect, Switch} from 'react-router-dom';
+import {Redirect, Route, Switch} from 'react-router-dom';
 import {Login} from '../features/Login/Login';
 import {ErrorSnackbar} from '../ErrorSnackbar/ErrorSnackbar';
 import {initializeApp, logOut} from '../features/Login/auth-reducer';
 
-function App() {
+type PropsType = {
+    demo?: boolean
+}
+
+function App({demo = false}:PropsType) {
     const status = useSelector<AppRootStateType, RequestStatusType>(state => state.app.status)
     const isInitialized = useSelector<AppRootStateType, boolean>(state => state.app.isInitialized)
     const isLoggedIn = useSelector<AppRootStateType, boolean>(state => state.auth.isLogged)
@@ -58,14 +62,12 @@ function App() {
                 <LinearProgress className={'linearProgress'} hidden={status !== 'loading'}/>
             </div>
             <Container fixed>
-                <BrowserRouter>
                     <Switch>
-                    <Route exact path={'/'} render={() => <TodolistsList/>}/>
+                    <Route exact path={'/'} render={() => <TodolistsList demo={demo}/>}/>
                     <Route path={'/login'} render={() => <Login/>}/>
                     <Route path={'/404'} render={() => <h1>Page not found</h1>}/>
                     <Redirect from={'*'} to={'/404'}/>
                     </Switch>
-                </BrowserRouter>
             </Container>
             <ErrorSnackbar/>
         </div>
