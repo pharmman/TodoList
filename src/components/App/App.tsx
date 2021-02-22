@@ -1,16 +1,6 @@
 import React, {useEffect} from 'react';
 import './App.css';
-import {
-    AppBar,
-    Button,
-    CircularProgress,
-    Container,
-    IconButton,
-    LinearProgress,
-    Toolbar,
-    Typography
-} from '@material-ui/core';
-import {Menu} from '@material-ui/icons';
+import {AppBar, Button, CircularProgress, Container, LinearProgress, Toolbar} from '@material-ui/core';
 import {TodolistsList} from '../features/TodolistsList/TodolistsList';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppRootStateType} from './store';
@@ -24,7 +14,7 @@ type PropsType = {
     demo?: boolean
 }
 
-function App({demo = false}:PropsType) {
+function App({demo = false}: PropsType) {
     const status = useSelector<AppRootStateType, RequestStatusType>(state => state.app.status)
     const isInitialized = useSelector<AppRootStateType, boolean>(state => state.app.isInitialized)
     const isLoggedIn = useSelector<AppRootStateType, boolean>(state => state.auth.isLogged)
@@ -32,7 +22,7 @@ function App({demo = false}:PropsType) {
 
     useEffect(() => {
         dispatch(initializeApp())
-    }, [])
+    }, [dispatch])
 
     if (!isInitialized) {
         return <div
@@ -49,25 +39,19 @@ function App({demo = false}:PropsType) {
         <div className="App">
             <AppBar position="static" className={'appBar'}>
                 <Toolbar>
-                    <IconButton edge="start" color="inherit" aria-label="menu">
-                        <Menu/>
-                    </IconButton>
-                    <Typography variant="h6">
-                        News
-                    </Typography>
-                    {isLoggedIn? <Button onClick={logOutHandler} color="inherit">LogOut</Button> : <></>}
+                    {isLoggedIn ? <Button onClick={logOutHandler} color="inherit">LogOut</Button> : <></>}
                 </Toolbar>
             </AppBar>
             <div style={{height: '4px'}}>
                 <LinearProgress className={'linearProgress'} hidden={status !== 'loading'}/>
             </div>
             <Container fixed>
-                    <Switch>
+                <Switch>
                     <Route exact path={'/'} render={() => <TodolistsList demo={demo}/>}/>
                     <Route path={'/login'} render={() => <Login/>}/>
-                    <Route path={'/404'} render={() => <h1>Page not found</h1>}/>
+                    <Route path={'/404'} render={() => <Redirect to={'/'}/>}/>
                     <Redirect from={'*'} to={'/404'}/>
-                    </Switch>
+                </Switch>
             </Container>
             <ErrorSnackbar/>
         </div>

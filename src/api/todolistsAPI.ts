@@ -65,10 +65,15 @@ type GetTaskResponseType = {
     error: string
 }
 
+export type FieldsErrorsType = {
+    'field': string,
+    'error': string
+};
 export type ResponseType<T = {}> = {
     data: T,
     resultCode: number,
-    messages: string[]
+    messages: string[],
+    fieldsErrors?: Array<FieldsErrorsType>
 }
 
 export type LoginRequestPayloadType = {
@@ -122,6 +127,7 @@ export const authAPI = {
         return instance.get<ResponseType<{ id: number, email: string, login: string }>>(`auth/me`)
     },
     login(data: LoginRequestPayloadType) {
+        debugger
         return instance.post<ResponseType<{userId: number}>>('auth/login', data)
     },
     logOut() {

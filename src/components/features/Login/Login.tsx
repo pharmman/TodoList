@@ -1,7 +1,7 @@
 import React from 'react';
-import {useFormik} from 'formik';
+import {FormikHelpers, useFormik} from 'formik';
 import {login} from './auth-reducer';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {
     Button,
     Checkbox,
@@ -12,13 +12,19 @@ import {
     Grid,
     TextField
 } from '@material-ui/core';
-import {AppRootStateType} from '../../App/store';
+import {AppRootStateType, useAppDispatch} from '../../App/store';
 import {Redirect} from 'react-router-dom';
 
 type InitialValuesType = {
     email?: string | null,
     password?: string | null,
     rememberMe?: boolean
+}
+
+type FormikValuesType = {
+    email: string,
+    password: string,
+    rememberMe: boolean
 }
 
 const validate = (values: InitialValuesType) => {
@@ -30,16 +36,16 @@ const validate = (values: InitialValuesType) => {
         errors.password = 'Must be 6 characters or more';
     }
 
-    if (!values.email) {
-        errors.email = 'Required';
-    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-        errors.email = 'Invalid email address';
-    }
+    // if (!values.email) {
+    //     errors.email = 'Required';
+    // } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+    //     errors.email = 'Invalid email address';
+    // }
     return errors
 }
 
 export const Login = () => {
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
     const isLogged = useSelector<AppRootStateType, boolean>(state => state.auth.isLogged)
 
     const formik = useFormik({
@@ -49,9 +55,16 @@ export const Login = () => {
             rememberMe: false,
         },
         validate,
-        onSubmit: values => {
-            dispatch(login(values))
-            formik.resetForm()
+        onSubmit: async (values, formikHelpers: FormikHelpers<FormikValuesType>) => {
+            const action = await dispatch(login(values))
+            if (login.rejected.match(action)) {
+                if (action.payload?.fieldsErrors?.length) {
+                    const error = action.payload?.fieldsErrors[0]
+                formikHelpers.setFieldError(error.field, error.error)
+                }
+            }
+            // dispatch(login(values))
+            // formik.resetForm()
         },
     });
     if (isLogged) {

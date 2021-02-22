@@ -34,7 +34,7 @@ export const ToDoList: React.FC<TodoListPropsType> = React.memo(({
             return
         }
         dispatch(getTasks(todolist.id))
-    }, [dispatch, todolist.id])
+    }, [dispatch, todolist.id, demo])
 
     let tasksForTodoList: Array<TaskType> = tasks
 
