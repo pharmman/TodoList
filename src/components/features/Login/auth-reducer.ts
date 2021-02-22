@@ -53,9 +53,7 @@ const slice = createSlice({
     },
     extraReducers: builder => {
         builder.addCase(login.fulfilled, (state, action) => {
-            if (action.payload) {
                 state.isLogged = action.payload.isLogged
-            }
         })
     }
 })

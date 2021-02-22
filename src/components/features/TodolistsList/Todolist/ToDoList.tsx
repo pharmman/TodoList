@@ -62,7 +62,7 @@ export const ToDoList: React.FC<TodoListPropsType> = React.memo(({
         changeTodoListTitle(todolist.id, title)
     }, [todolist.id, changeTodoListTitle])
 
-    const removeTask = useCallback((taskId: string) => dispatch(removeTaskTC(todolist.id, taskId)), [todolist.id, dispatch]);
+    const removeTask = useCallback((taskId: string) => dispatch(removeTaskTC({todolistId: todolist.id, taskId})), [todolist.id, dispatch]);
 
     const changeTitle = useCallback((title: string, taskId: string) => {
         dispatch(updateTaskTC(todolist.id, taskId, {title: title}))
