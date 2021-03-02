@@ -10,7 +10,7 @@ export default {
     component: Task,
     decorators: [(Story) => <li style={{ listStyle:'none' }}><Story/></li>],
     argTypes: {
-        task: {
+        model: {
             description: 'Task with which we are working'
         },
         removeTask: {

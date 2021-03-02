@@ -4,11 +4,11 @@ import {AppBar, Button, CircularProgress, Container, LinearProgress, Toolbar} fr
 import {TodolistsList} from '../features/TodolistsList/TodolistsList';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppRootStateType} from './store';
-import {RequestStatusType} from './app-reducer';
+import {initializeApp, RequestStatusType} from './app-reducer';
 import {Redirect, Route, Switch} from 'react-router-dom';
 import {Login} from '../features/Login/Login';
 import {ErrorSnackbar} from '../ErrorSnackbar/ErrorSnackbar';
-import {initializeApp, logOut} from '../features/Login/auth-reducer';
+import {logout} from '../features/Login/auth-reducer';
 
 type PropsType = {
     demo?: boolean
@@ -32,7 +32,7 @@ function App({demo = false}: PropsType) {
     }
 
     const logOutHandler = () => {
-        dispatch(logOut())
+        dispatch(logout())
     }
 
     return (

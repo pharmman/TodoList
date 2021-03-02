@@ -55,7 +55,7 @@ export const ToDoList: React.FC<TodoListPropsType> = React.memo(({
     const deleteTodoList = () => removeTodoList(todolist.id);
 
     const addTask = useCallback((title: string) => {
-        dispatch(createTaskTC(todolist.id, title))
+        dispatch(createTaskTC({id: todolist.id, title}))
     }, [todolist.id, dispatch])
 
     const localChangeTodoListTitle = useCallback((title: string) => {
@@ -65,14 +65,14 @@ export const ToDoList: React.FC<TodoListPropsType> = React.memo(({
     const removeTask = useCallback((taskId: string) => dispatch(removeTaskTC({todolistId: todolist.id, taskId})), [todolist.id, dispatch]);
 
     const changeTitle = useCallback((title: string, taskId: string) => {
-        dispatch(updateTaskTC(todolist.id, taskId, {title: title}))
+        dispatch(updateTaskTC({todolistId: todolist.id, taskId, model:{title: title}}))
     }, [todolist.id, dispatch])
 
     const changeStatus = useCallback((e: ChangeEvent<HTMLInputElement>, taskId: string) => {
-        dispatch(updateTaskTC(todolist.id, taskId, e.currentTarget.checked ?
+        dispatch(updateTaskTC({todolistId: todolist.id, taskId, model: e.currentTarget.checked ?
             {status: TaskStatuses.Completed}
             :
-            {status: TaskStatuses.New}))
+            {status: TaskStatuses.New}}))
     }, [todolist.id, dispatch]);
 
 

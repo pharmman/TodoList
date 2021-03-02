@@ -2,8 +2,7 @@ import React, {useCallback, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppRootStateType} from '../../App/store';
 import {
-    changeTodoListFilterAC,
-    changeTodolistTitleTC,
+    changeTodoListFilterAC, changeTodolistTitle,
     createTodolist,
     deleteTodolist,
     FilterValuesType,
@@ -46,7 +45,7 @@ export const TodolistsList: React.FC<TodolistsListPropsType> = ({demo}) => {
     }, [dispatch])
 
     const changeTodoListTitle = useCallback((todoListId: string, title: string) => {
-        dispatch(changeTodolistTitleTC(todoListId, title))
+        dispatch(changeTodolistTitle({id: todoListId,newTitle: title}))
     }, [dispatch])
 
 
