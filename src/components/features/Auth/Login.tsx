@@ -14,6 +14,7 @@ import {
 } from '@material-ui/core';
 import {AppRootStateType, useAppDispatch} from '../../App/store';
 import {Redirect} from 'react-router-dom';
+import {selectIsLoggedIn} from './selectors';
 
 type InitialValuesType = {
     email?: string | null,
@@ -46,7 +47,7 @@ const validate = (values: InitialValuesType) => {
 
 export const Login = () => {
     const dispatch = useAppDispatch()
-    const isLogged = useSelector<AppRootStateType, boolean>(state => state.auth.isLogged)
+    const isLoggedIn = useSelector(selectIsLoggedIn)
 
     const formik = useFormik({
         initialValues: {
@@ -67,7 +68,7 @@ export const Login = () => {
             // formik.resetForm()
         },
     });
-    if (isLogged) {
+    if (isLoggedIn) {
         return <Redirect to={'/'}/>
     }
     return (

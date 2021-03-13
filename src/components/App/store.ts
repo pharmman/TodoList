@@ -1,11 +1,12 @@
 import {tasksReducer} from '../features/TodolistsList/Todolist/tasks-reducer';
 import {todoListReducer} from '../features/TodolistsList/Todolist/todolist-reducer';
 import {appReducer} from './app-reducer';
-import {combineReducers} from 'redux';
+import {ActionCreatorsMapObject, bindActionCreators, combineReducers} from 'redux';
 import thunk from 'redux-thunk';
-import {authReducer} from '../features/Login/auth-reducer';
+import {authReducer} from '../features/Auth/auth-reducer';
 import {configureStore} from '@reduxjs/toolkit';
 import {useDispatch} from 'react-redux';
+import {useMemo} from 'react';
 
 
 export const rootReducer = combineReducers({
@@ -25,3 +26,14 @@ export type AppRootStateType = ReturnType<typeof store.getState>
 window.store = store
 type AppDispatchType = typeof store.dispatch
 export const useAppDispatch = () => useDispatch<AppDispatchType>()
+
+
+export function useActions<T extends ActionCreatorsMapObject<any>>(actions: T) {
+    const dispatch = useAppDispatch()
+
+    const boundActions = useMemo(() => {
+        return bindActionCreators(actions, dispatch)
+    }, [])
+
+    return boundActions
+}

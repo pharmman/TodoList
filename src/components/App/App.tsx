@@ -3,21 +3,24 @@ import './App.css';
 import {AppBar, Button, CircularProgress, Container, LinearProgress, Toolbar} from '@material-ui/core';
 import {TodolistsList} from '../features/TodolistsList/TodolistsList';
 import {useDispatch, useSelector} from 'react-redux';
-import {AppRootStateType} from './store';
-import {initializeApp, RequestStatusType} from './app-reducer';
+import {initializeApp} from './app-reducer';
 import {Redirect, Route, Switch} from 'react-router-dom';
-import {Login} from '../features/Login/Login';
+import {Login} from '../features/Auth/Login';
 import {ErrorSnackbar} from '../ErrorSnackbar/ErrorSnackbar';
-import {logout} from '../features/Login/auth-reducer';
+import {logout} from '../features/Auth/auth-reducer';
+import {selectIsInitialized, selectStatus} from './selectors';
+import {authSelectors} from '../features/Auth';
 
 type PropsType = {
     demo?: boolean
 }
 
+
 function App({demo = false}: PropsType) {
-    const status = useSelector<AppRootStateType, RequestStatusType>(state => state.app.status)
-    const isInitialized = useSelector<AppRootStateType, boolean>(state => state.app.isInitialized)
-    const isLoggedIn = useSelector<AppRootStateType, boolean>(state => state.auth.isLogged)
+
+    const status = useSelector(selectStatus)
+    const isInitialized = useSelector(selectIsInitialized)
+    const isLoggedIn = useSelector(authSelectors.selectIsLoggedIn)
     const dispatch = useDispatch()
 
     useEffect(() => {

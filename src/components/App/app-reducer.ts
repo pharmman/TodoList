@@ -1,7 +1,7 @@
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {authAPI, ResultCodes} from '../../api/todolistsAPI';
 import {handleServerAppError} from '../../utils/error-utils';
-import {setIsLogged} from '../features/Login/auth-reducer';
+import {setIsLogged} from '../features/Auth/auth-reducer';
 
 
 export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed'

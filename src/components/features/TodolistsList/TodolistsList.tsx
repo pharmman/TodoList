@@ -2,7 +2,8 @@ import React, {useCallback, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppRootStateType} from '../../App/store';
 import {
-    changeTodoListFilterAC, changeTodolistTitle,
+    changeTodoListFilterAC,
+    changeTodolistTitle,
     createTodolist,
     deleteTodolist,
     FilterValuesType,
@@ -13,6 +14,7 @@ import {Grid, Paper} from '@material-ui/core';
 import {AddItemForm} from '../../AddItemForm/AddItemForm';
 import {ToDoList} from './Todolist/ToDoList';
 import {Redirect} from 'react-router-dom';
+import {authSelectors} from '../Auth';
 
 type TodolistsListPropsType = {
     demo?: boolean
@@ -21,7 +23,8 @@ type TodolistsListPropsType = {
 export const TodolistsList: React.FC<TodolistsListPropsType> = ({demo}) => {
     const dispatch = useDispatch();
     const todoLists = useSelector<AppRootStateType, Array<TodolistDomainType>>(state => state.todoLists)
-    const isLoggedIn = useSelector<AppRootStateType, boolean>(state => state.auth.isLogged)
+    const isLoggedIn = useSelector(authSelectors.selectIsLoggedIn)
+
 
 
     useEffect(() => {
