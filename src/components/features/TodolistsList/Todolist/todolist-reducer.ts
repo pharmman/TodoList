@@ -1,7 +1,7 @@
 import {APITodolist, ResultCodes, TodolistType} from '../../../../api/todolistsAPI';
+import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {setAppError, setAppStatus} from '../../../App/app-reducer';
 import {handleServerAppError, handleServerNetworkError} from '../../../../utils/error-utils';
-import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 //types
 export type FilterValuesType = 'all' | 'active' | 'completed'
@@ -12,7 +12,7 @@ export type TodolistDomainType = TodolistType & {
     entityStatus: EntityStatusType
 }
 
-export const getTodolists = createAsyncThunk('todolist/getTodolist',
+  const getTodolists = createAsyncThunk('todolist/getTodolist',
     async (param, {dispatch, rejectWithValue}) => {
         dispatch(setAppStatus({status: 'loading'}))
         const res = await APITodolist.getTodolist()
@@ -29,7 +29,7 @@ export const getTodolists = createAsyncThunk('todolist/getTodolist',
             return rejectWithValue(err)
         }
     })
-export const createTodolist = createAsyncThunk('todolist/createTodolist',
+  const createTodolist = createAsyncThunk('todolist/createTodolist',
     async (title: string, {dispatch, rejectWithValue}) => {
         dispatch(setAppStatus({status: 'loading'}))
         const res = await APITodolist.createTodolist(title)
@@ -46,7 +46,7 @@ export const createTodolist = createAsyncThunk('todolist/createTodolist',
             return rejectWithValue(err)
         }
     })
-export const deleteTodolist = createAsyncThunk('todolist/deleteTodolist',
+  const deleteTodolist = createAsyncThunk('todolist/deleteTodolist',
     async (id: string, {dispatch, rejectWithValue}) => {
         dispatch(setAppStatus({status: 'loading'}))
         dispatch(setTodolistEntityStatus({entityStatus: 'loading', id}))
@@ -68,7 +68,7 @@ export const deleteTodolist = createAsyncThunk('todolist/deleteTodolist',
             return rejectWithValue(err)
         }
     })
-export const changeTodolistTitle = createAsyncThunk('todolist/changeTodolistTitle',
+  const changeTodolistTitle = createAsyncThunk('todolist/changeTodolistTitle',
     async (param: { id: string, newTitle: string }, {dispatch, rejectWithValue}) => {
         const {id, newTitle} = param
         dispatch(setAppStatus({status: 'loading'}))
@@ -87,11 +87,18 @@ export const changeTodolistTitle = createAsyncThunk('todolist/changeTodolistTitl
         }
     })
 
-const slice = createSlice({
+export const asyncActions = {
+    getTodolists,
+    createTodolist,
+    deleteTodolist,
+    changeTodolistTitle
+}
+
+export const slice = createSlice({
         name: 'todolist',
         initialState: [] as Array<TodolistDomainType>,
         reducers: {
-            changeTodoListFilterAC: (state, action: PayloadAction<{ filter: FilterValuesType, id: string }>) => {
+            changeTodoListFilter: (state, action: PayloadAction<{ filter: FilterValuesType, id: string }>) => {
                 const index = state.findIndex(tl => tl.id === action.payload.id)
                 state[index].filter = action.payload.filter
             },
@@ -122,7 +129,7 @@ const slice = createSlice({
 export const todoListReducer = slice.reducer
 export const {
     setTodolistEntityStatus,
-    changeTodoListFilterAC,
+    changeTodoListFilter,
 } = slice.actions
 
 

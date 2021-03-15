@@ -3,11 +3,13 @@ import {
     setTodolistEntityStatus,
     TodolistDomainType,
     todoListReducer,
-    changeTodoListFilterAC,
-    getTodolists, deleteTodolist, createTodolist, changeTodolistTitle,
+    changeTodoListFilter,
+
 } from './todolist-reducer';
 import {v1} from 'uuid';
+import {asyncActions as todolistAsyncActions} from './todolist-reducer'
 
+const {changeTodolistTitle, createTodolist, deleteTodolist, getTodolists} = todolistAsyncActions
 let startState: Array<TodolistDomainType>
 let todolistId1: string;
 let todolistId2: string;
@@ -65,7 +67,7 @@ test('correct filter of todolist should be changed', () => {
 
     let newFilter: FilterValuesType = 'completed';
 
-    const action = changeTodoListFilterAC({filter: 'completed', id: todolistId2})
+    const action = changeTodoListFilter({filter: 'completed', id: todolistId2})
 
     const endState = todoListReducer(startState, action);
 

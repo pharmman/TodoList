@@ -1,14 +1,14 @@
 import React from 'react';
 import {Meta, Story} from '@storybook/react/types-6-0';
-import {action} from '@storybook/addon-actions';
 import {Task, TaskPropsType} from './Task';
 import {TaskPriorities, TaskStatuses} from '../../../../../api/todolistsAPI';
+import {ReduxStoreProviderDecorator} from '../../../../../stories/decorators/ReduxStoreProviderDecorator';
 
 
 export default {
     title: 'Todolist/Task',
     component: Task,
-    decorators: [(Story) => <li style={{ listStyle:'none' }}><Story/></li>],
+    decorators: [ReduxStoreProviderDecorator],
     argTypes: {
         model: {
             description: 'Task with which we are working'
@@ -36,9 +36,9 @@ NotCompletedTask.args = {
         priority: TaskPriorities.Middle,
         startDate: '',
         todoListId: 'todolistId1'},
-    changeStatus: action('status changed'),
-    changeTitle: action('title changed'),
-    removeTask: action('task deleted')
+    // changeStatus: action('status changed'),
+    // changeTitle: action('title changed'),
+    // removeTask: action('task deleted')
 };
 export const CompletedTask = Template.bind({});
 CompletedTask.args = {
@@ -49,8 +49,8 @@ CompletedTask.args = {
         priority: TaskPriorities.Middle,
         startDate: '',
         todoListId: 'todolistId1'},
-    changeStatus: action('status changed'),
-    changeTitle: action('title changed'),
-    removeTask: action('task deleted')
+    // changeStatus: action('status changed'),
+    // changeTitle: action('title changed'),
+    // removeTask: action('task deleted')
 };
 

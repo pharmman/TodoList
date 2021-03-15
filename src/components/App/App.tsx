@@ -1,15 +1,14 @@
 import React, {useEffect} from 'react';
 import './App.css';
 import {AppBar, Button, CircularProgress, Container, LinearProgress, Toolbar} from '@material-ui/core';
-import {TodolistsList} from '../features/TodolistsList/TodolistsList';
-import {useDispatch, useSelector} from 'react-redux';
-import {initializeApp} from './app-reducer';
+import {TodolistsList} from '../features/TodolistsList';
+import {useSelector} from 'react-redux';
 import {Redirect, Route, Switch} from 'react-router-dom';
-import {Login} from '../features/Auth/Login';
+import {authActions, authSelectors, Login} from '../features/Auth';
 import {ErrorSnackbar} from '../ErrorSnackbar/ErrorSnackbar';
-import {logout} from '../features/Auth/auth-reducer';
 import {selectIsInitialized, selectStatus} from './selectors';
-import {authSelectors} from '../features/Auth';
+import {appAsyncActions} from './index';
+import {useActions} from './store';
 
 type PropsType = {
     demo?: boolean
@@ -21,11 +20,14 @@ function App({demo = false}: PropsType) {
     const status = useSelector(selectStatus)
     const isInitialized = useSelector(selectIsInitialized)
     const isLoggedIn = useSelector(authSelectors.selectIsLoggedIn)
-    const dispatch = useDispatch()
+    const {initializeApp} = useActions(appAsyncActions)
+    const {logout} = useActions(authActions)
 
     useEffect(() => {
-        dispatch(initializeApp())
-    }, [dispatch])
+        if (!demo) {
+            initializeApp()
+        }
+    }, [initializeApp, demo])
 
     if (!isInitialized) {
         return <div
@@ -35,14 +37,14 @@ function App({demo = false}: PropsType) {
     }
 
     const logOutHandler = () => {
-        dispatch(logout())
+        logout()
     }
 
     return (
         <div className="App">
             <AppBar position="static" className={'appBar'}>
                 <Toolbar>
-                    {isLoggedIn ? <Button onClick={logOutHandler} color="inherit">LogOut</Button> : <></>}
+                    {isLoggedIn && <Button onClick={logOutHandler} color="inherit">LogOut</Button>}
                 </Toolbar>
             </AppBar>
             <div style={{height: '4px'}}>

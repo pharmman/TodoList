@@ -4,8 +4,11 @@ import {
     TasksStateType
 } from './tasks-reducer';
 import {TaskPriorities, TaskStatuses} from '../../../../api/todolistsAPI';
-import {createTodolist, deleteTodolist, getTodolists} from './todolist-reducer';
-import {createTaskTC, getTasks, removeTaskTC, updateTaskTC} from './tasks-actions';
+import {asyncActions as tasksAsyncActions} from './tasks-reducer'
+import {asyncActions as todolistAsyncActions} from './todolist-reducer'
+
+const {createTaskTC, getTasksTC, removeTaskTC, updateTaskTC} = tasksAsyncActions
+const {createTodolist, deleteTodolist, getTodolists} = todolistAsyncActions
 
 let startState: TasksStateType;
 beforeEach(() => {
@@ -410,7 +413,7 @@ test('empty arrays should be added when todolist added', () => {
 
 test('tasks should be setted to todolists', () => {
     const requestPayload = {todolistId: 'todolistId1', tasks: startState['todolistId1']};
-    const action = getTasks.fulfilled(requestPayload, 'requestId', 'todolistId1')
+    const action = getTasksTC.fulfilled(requestPayload, 'requestId', 'todolistId1')
 
     const endState = tasksReducer({
         'todolistId1': [],

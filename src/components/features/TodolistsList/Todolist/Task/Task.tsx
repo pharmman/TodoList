@@ -4,33 +4,41 @@ import {EditableSpan} from '../../../../EditableSpan/EditableSpan';
 import {Delete} from '@material-ui/icons';
 import {TaskStatuses, TaskType} from '../../../../../api/todolistsAPI';
 import {EntityStatusType} from '../todolist-reducer';
+import {useActions} from '../../../../App/store';
+import {tasksActions} from '../../index';
 
 export type TaskPropsType = {
     task: TaskType
-    removeTask: (taskId: string) => void
-    changeTitle: (title: string, taskId: string) => void
-    changeStatus: (e: ChangeEvent<HTMLInputElement>, taskId: string) => void
     entityStatus?: EntityStatusType
 }
 export const Task: React.FC<TaskPropsType> = React.memo(({
                                                              task,
-                                                             removeTask,
-                                                             changeTitle,
-                                                             changeStatus,
                                                              entityStatus
                                                          }) => {
-    const localChangeStatus = useCallback((e: ChangeEvent<HTMLInputElement>) => changeStatus(e, task.id), [changeStatus, task.id])
-    const localChangeTitle = useCallback((title: string) => changeTitle(title, task.id), [task.id, changeTitle])
-    const localRemoveTask = useCallback(() => removeTask(task.id), [removeTask, task.id])
+
+    const {updateTaskTC, removeTaskTC} = useActions(tasksActions)
+
+    const onChangeStatusHandler = useCallback((e: ChangeEvent<HTMLInputElement>) => updateTaskTC({
+        todolistId: task.todoListId, taskId: task.id, model: e.currentTarget.checked ?
+            {status: TaskStatuses.Completed}
+            :
+            {status: TaskStatuses.New}
+    }), [updateTaskTC, task.id, task.todoListId])
+
+    const onChangeTitleHandler = useCallback((title: string) =>
+        updateTaskTC({todolistId: task.todoListId, taskId: task.id, model: {title}}), [task.id, updateTaskTC, task.todoListId])
+
+    const onRemoveTaskHandler = useCallback(() => removeTaskTC({todolistId:task.todoListId, taskId: task.id}), [task.id, removeTaskTC, task.todoListId])
+
     return (
         <li style={{marginLeft: '0'}}>
             <Checkbox
-                onChange={localChangeStatus}
+                onChange={onChangeStatusHandler}
                 checked={task.status === TaskStatuses.Completed}
                 color={'primary'}
             />
-            <EditableSpan changeTitle={localChangeTitle} title={task.title} entityStatus={entityStatus}/>
-            <IconButton onClick={localRemoveTask} color={'primary'} disabled={entityStatus === 'loading'}>
+            <EditableSpan changeTitle={onChangeTitleHandler} title={task.title} entityStatus={entityStatus}/>
+            <IconButton onClick={onRemoveTaskHandler} color={'primary'} disabled={entityStatus === 'loading'}>
                 <Delete/>
             </IconButton>
         </li>

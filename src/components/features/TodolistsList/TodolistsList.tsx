@@ -1,55 +1,35 @@
 import React, {useCallback, useEffect} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
-import {AppRootStateType} from '../../App/store';
-import {
-    changeTodoListFilterAC,
-    changeTodolistTitle,
-    createTodolist,
-    deleteTodolist,
-    FilterValuesType,
-    getTodolists,
-    TodolistDomainType
-} from './Todolist/todolist-reducer';
+import {useSelector} from 'react-redux';
+import {AppRootStateType, useActions} from '../../App/store';
+import {TodolistDomainType} from './Todolist/todolist-reducer';
 import {Grid, Paper} from '@material-ui/core';
 import {AddItemForm} from '../../AddItemForm/AddItemForm';
 import {ToDoList} from './Todolist/ToDoList';
 import {Redirect} from 'react-router-dom';
 import {authSelectors} from '../Auth';
+import {todolistActions} from './index';
 
 type TodolistsListPropsType = {
     demo?: boolean
 }
 
 export const TodolistsList: React.FC<TodolistsListPropsType> = ({demo}) => {
-    const dispatch = useDispatch();
     const todoLists = useSelector<AppRootStateType, Array<TodolistDomainType>>(state => state.todoLists)
     const isLoggedIn = useSelector(authSelectors.selectIsLoggedIn)
-
+    const {createTodolist, getTodolists} = useActions(todolistActions)
 
 
     useEffect(() => {
         if (!isLoggedIn || demo) {
             return
         }
-        dispatch(getTodolists())
-    }, [isLoggedIn, dispatch, demo])
+        getTodolists()
+    }, [isLoggedIn, demo, getTodolists])
 
-    const changeFilter = useCallback((value: FilterValuesType, todoListID: string) => {
-        dispatch(changeTodoListFilterAC({filter: value, id: todoListID}))
-    }, [dispatch])
-
-
-    const removeTodoList = useCallback((todoListID: string) => {
-        dispatch(deleteTodolist(todoListID))
-    }, [dispatch])
 
     const addTodoList = useCallback((title: string) => {
-        dispatch(createTodolist(title))
-    }, [dispatch])
-
-    const changeTodoListTitle = useCallback((todoListId: string, title: string) => {
-        dispatch(changeTodolistTitle({id: todoListId,newTitle: title}))
-    }, [dispatch])
+        createTodolist(title)
+    }, [createTodolist])
 
 
     if (!isLoggedIn) {
@@ -59,17 +39,14 @@ export const TodolistsList: React.FC<TodolistsListPropsType> = ({demo}) => {
         <Grid container style={{padding: '15px'}}>
             <AddItemForm addItem={addTodoList}/>
         </Grid>
-        <Grid container spacing={4}>
+        <Grid container spacing={4} style={{flexWrap:'nowrap', overflowX: 'scroll'}}>
             {
                 todoLists.map(tl => {
                     return (
                         <Grid item key={tl.id}>
-                            <Paper elevation={3} style={{padding: '15px'}}>
+                            <Paper elevation={3} style={{padding: '15px', width: '250px'}}>
                                 <ToDoList
                                     key={tl.id}
-                                    changeFilter={changeFilter}
-                                    removeTodoList={removeTodoList}
-                                    changeTodoListTitle={changeTodoListTitle}
                                     todolist={tl}
                                     demo={demo}
                                 />

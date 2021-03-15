@@ -23,7 +23,7 @@ export const login = createAsyncThunk<undefined, LoginRequestPayloadType, {
     }
 })
 
-export const logout = createAsyncThunk('auth/logout', async (params, {dispatch, rejectWithValue}) => {
+const logout = createAsyncThunk('auth/logout', async (params, {dispatch, rejectWithValue}) => {
     dispatch(setAppStatus({status: 'loading'}))
     try {
         let res = await authAPI.logOut()
@@ -39,7 +39,11 @@ export const logout = createAsyncThunk('auth/logout', async (params, {dispatch, 
     }
 })
 
-const slice = createSlice({
+export const asyncActions = {
+    login, logout
+}
+
+export const slice = createSlice({
     name: 'auth',
     initialState: {
         isLogged: false

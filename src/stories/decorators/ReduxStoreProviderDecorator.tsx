@@ -51,7 +51,7 @@ const initialState: AppRootStateType = {
                 todoListId: 'todolistId2'
             },
             {
-                id: v1(), title: 'React Book', status: TaskStatuses.Completed, addedDate: '',
+                id: v1(), title: 'React Book', status: TaskStatuses.New, addedDate: '',
                 deadline: '',
                 description: '',
                 order: 1,
@@ -67,7 +67,7 @@ const initialState: AppRootStateType = {
     app: {
         isInitialized: true,
         error: null,
-        status: 'idle'
+        status: 'succeeded'
     }
 };
 
@@ -79,7 +79,6 @@ const storybookRootReducer: typeof rootReducer = combineReducers({
 })
 
 
-// const storybookStore = createStore(storybookRootReducer, initialState, applyMiddleware(thunk))
 const storybookStore = configureStore({
     preloadedState:initialState,
     reducer: storybookRootReducer,
@@ -90,7 +89,7 @@ export const ReduxStoreProviderDecorator = (storyFn: any) => {
     return (
         <HashRouter>
             <Provider store={storybookStore}>
-                {storyFn()}
+                {storyFn() }
             </Provider>
         </HashRouter>
     )
