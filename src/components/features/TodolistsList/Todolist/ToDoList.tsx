@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect} from 'react';
 import {AddItemForm} from '../../../AddItemForm/AddItemForm';
 import {EditableSpan} from '../../../EditableSpan/EditableSpan';
-import {Button, IconButton} from '@material-ui/core';
+import {Button, IconButton, Paper} from '@material-ui/core';
 import {Delete} from '@material-ui/icons';
 import {useSelector} from 'react-redux';
 import {AppRootStateType, useActions} from '../../../App/store';
@@ -58,9 +58,7 @@ export const ToDoList: React.FC<TodoListPropsType> = React.memo(({
     }, [todolist.id, changeTodolistTitle])
 
 
-
-
-    const currentTasks = tasksForTodoList.map(t => {
+    let currentTasks = tasksForTodoList.map(t => {
         return (
             <span key={t.id}>
                 <Task entityStatus={t.entityStatus} task={t}/>
@@ -70,10 +68,11 @@ export const ToDoList: React.FC<TodoListPropsType> = React.memo(({
 
     return (
         <div className="App">
-            <div>
+            <Paper elevation={3} style={{padding: '15px', position: 'relative'}}>
                 <h3><EditableSpan title={todolist.title} changeTitle={localChangeTodoListTitle}
                                   entityStatus={todolist.entityStatus}/>
-                    <IconButton onClick={removeTodoList} color={'primary'}
+                    <IconButton style={{position: 'absolute', top: '0', right: '0'}} onClick={removeTodoList}
+                                color={'primary'}
                                 disabled={todolist.entityStatus === 'loading'}>
                         <Delete/>
                     </IconButton>
@@ -81,6 +80,7 @@ export const ToDoList: React.FC<TodoListPropsType> = React.memo(({
                 <AddItemForm addItem={addTask} entityStatus={todolist.entityStatus}/>
                 <ul style={{listStyle: 'none', padding: '0'}}>
                     {currentTasks}
+                    {tasksForTodoList.length === 0 && <span style={{opacity: '0.7', padding: '10px'}}>No tasks</span>}
                 </ul>
                 <div>
                     <FilterButton callback={onSetAllFilterClick}
@@ -90,7 +90,7 @@ export const ToDoList: React.FC<TodoListPropsType> = React.memo(({
                     <FilterButton callback={onSetCompletedFilterClick}
                                   isSelected={todolist.filter === 'completed'}>Completed</FilterButton>
                 </div>
-            </div>
+            </Paper>
         </div>
     )
 })

@@ -8,7 +8,7 @@ export type EditableSpanPropsType = {
     entityStatus?: EntityStatusType
 }
 
-export const EditableSpan = React.memo ( (props: EditableSpanPropsType) => {
+export const    EditableSpan = React.memo ( (props: EditableSpanPropsType) => {
     console.log('EditableSpan called')
     const onEditMode = () => {
         setEditMode(true)

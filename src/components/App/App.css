@@ -1,7 +1,10 @@
-/*.App {*/
-/*  padding: 30px;*/
-/*  display: flex;*/
+
+/*::-webkit-scrollbar {*/
+/*    position: absolute;*/
+/*    background-color: red;*/
+/*    width: 1px;*/
 /*}*/
+
 
 /*.App > div {*/
 /*  margin-right: 50px;*/
