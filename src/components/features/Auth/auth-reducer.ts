@@ -1,8 +1,10 @@
-import {setAppStatus} from '../../App';
-import {authAPI, FieldsErrorsType, LoginRequestPayloadType, ResultCodes} from '../../../api/todolistsAPI';
+import {authAPI} from '../../../api/todolistsAPI';
 import {handleServerAppError} from '../../../utils/error-utils';
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {AxiosError} from 'axios';
+import {FieldsErrorsType, LoginRequestPayloadType, ResultCodes} from '../../../api/types';
+import {appActions} from '../CommonActions/commonApplicationActions';
+
 
 export const login = createAsyncThunk<undefined, LoginRequestPayloadType, {
     rejectValue: { errors: Array<string>, fieldsErrors?: Array<FieldsErrorsType> }
@@ -11,7 +13,7 @@ export const login = createAsyncThunk<undefined, LoginRequestPayloadType, {
     try {
         let res = await authAPI.login(data)
         if (res.data.resultCode === ResultCodes.Success) {
-            thunkAPI.dispatch(setAppStatus({status: 'succeeded'}))
+            thunkAPI.dispatch(appActions.setAppStatus({status: 'succeeded'}))
         } else {
             handleServerAppError<{ userId: number }>(res.data, thunkAPI.dispatch)
             return thunkAPI.rejectWithValue({errors: res.data.messages, fieldsErrors: res.data.fieldsErrors})
@@ -24,11 +26,11 @@ export const login = createAsyncThunk<undefined, LoginRequestPayloadType, {
 })
 
 const logout = createAsyncThunk('auth/logout', async (params, {dispatch, rejectWithValue}) => {
-    dispatch(setAppStatus({status: 'loading'}))
+    dispatch(appActions.setAppStatus({status: 'loading'}))
     try {
         let res = await authAPI.logOut()
         if (res.data.resultCode === ResultCodes.Success) {
-            dispatch(setAppStatus({status: 'succeeded'}))
+            dispatch(appActions.setAppStatus({status: 'succeeded'}))
         } else {
             handleServerAppError(res.data, dispatch)
             return rejectWithValue({})
@@ -63,8 +65,6 @@ export const slice = createSlice({
     }
 })
 
-export const authReducer = slice.reducer
-export const {setIsLogged} = slice.actions
 
 
 

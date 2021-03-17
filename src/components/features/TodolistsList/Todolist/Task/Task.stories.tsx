@@ -1,8 +1,8 @@
 import React from 'react';
 import {Meta, Story} from '@storybook/react/types-6-0';
 import {Task, TaskPropsType} from './Task';
-import {TaskPriorities, TaskStatuses} from '../../../../../api/todolistsAPI';
 import {ReduxStoreProviderDecorator} from '../../../../../stories/decorators/ReduxStoreProviderDecorator';
+import {TaskPriorities, TaskStatuses} from '../../../../../api/types';
 
 
 export default {

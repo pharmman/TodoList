@@ -1,14 +1,14 @@
 import React, {useEffect} from 'react';
 import './App.css';
 import {AppBar, Button, CircularProgress, Container, LinearProgress, Toolbar} from '@material-ui/core';
-import {TodolistsList} from '../features/TodolistsList';
+import {TodolistsList} from '../components/features/TodolistsList';
 import {useSelector} from 'react-redux';
 import {Redirect, Route, Switch} from 'react-router-dom';
-import {authActions, authSelectors, Login} from '../features/Auth';
-import {ErrorSnackbar} from '../ErrorSnackbar/ErrorSnackbar';
-import {selectIsInitialized, selectStatus} from './selectors';
-import {appAsyncActions} from './index';
-import {useActions} from './store';
+import {authActions, authSelectors, Login} from '../components/features/Auth';
+import {ErrorSnackbar} from '../components/ErrorSnackbar/ErrorSnackbar';
+import {selectIsInitialized, selectStatus} from '../components/features/Application/selectors';
+import {appAsyncActions} from '../components/features/Application';
+import {useActions} from '../utils/redux-utils';
 
 type PropsType = {
     demo?: boolean

@@ -1,5 +1,13 @@
 import axios from 'axios';
-import {EntityStatusType} from '../components/features/TodolistsList/Todolist/todolist-reducer';
+import {
+    GetTaskResponseType,
+    LoginRequestPayloadType,
+    ResponseTodolistType,
+    ResponseType,
+    TaskType,
+    TodolistType,
+    UpdateTaskModelType
+} from './types';
 
 const instance = axios.create({
     baseURL: 'https://social-network.samuraijs.com/api/1.1/',
@@ -8,88 +16,6 @@ const instance = axios.create({
         'api-key': 'ea1464d3-6693-4a83-9755-2421f1dd088c'
     }
 })
-
-//types
-export enum TaskStatuses {
-    New = 0,
-    InProgress = 1,
-    Completed = 2,
-    Draft = 3
-}
-
-export enum TaskPriorities {
-    Low = 0,
-    Middle = 1,
-    Hi = 2,
-    Urgently = 3,
-    Later = 4
-}
-
-export enum ResultCodes {
-    Success = 0,
-    Error = 1,
-    Captcha = 10
-}
-
-export type TodolistType = {
-    id: string,
-    addedDate: string,
-    order: number,
-    title: string
-}
-
-export type TaskType = {
-    description: string
-    title: string
-    status: TaskStatuses
-    priority: TaskPriorities
-    startDate: string
-    deadline: string
-    id: string
-    todoListId: string
-    order: number
-    addedDate: string
-    entityStatus?: EntityStatusType
-}
-
-type ResponseTodolistType<T = {}> = {
-    data: T
-    resultCode: number,
-    messages: string[],
-    fieldsErrors: []
-}
-
-type GetTaskResponseType = {
-    items: TaskType[]
-    totalCount: number
-    error: string
-}
-
-export type FieldsErrorsType = {
-    'field': string,
-    'error': string
-};
-export type ResponseType<T = {}> = {
-    data: T,
-    resultCode: number,
-    messages: string[],
-    fieldsErrors?: Array<FieldsErrorsType>
-}
-
-export type LoginRequestPayloadType = {
-    email: string,
-    password: string,
-    rememberMe: boolean
-}
-
-type UpdateTaskModelType = {
-    description: string
-    title: string
-    status: TaskStatuses
-    priority: TaskPriorities
-    startDate: string
-    deadline: string
-}
 
 //api-s
 export const APITodolist = {
@@ -127,7 +53,6 @@ export const authAPI = {
         return instance.get<ResponseType<{ id: number, email: string, login: string }>>(`auth/me`)
     },
     login(data: LoginRequestPayloadType) {
-        debugger
         return instance.post<ResponseType<{userId: number}>>('auth/login', data)
     },
     logOut() {

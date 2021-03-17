@@ -1,7 +1,9 @@
 import {Dispatch} from 'redux';
-import {ResponseType} from '../api/todolistsAPI'
 import {AxiosError} from 'axios';
-import {setAppError, setAppStatus} from '../components/App';
+import {appActions} from '../components/features/CommonActions/commonApplicationActions'
+import {ResponseType} from '../api/types';
+
+const {setAppStatus, setAppError} = appActions
 
 export const handleServerAppError = <T>(data: ResponseType<T>, dispatch: Dispatch) => {
     if (data.messages.length > 0) {

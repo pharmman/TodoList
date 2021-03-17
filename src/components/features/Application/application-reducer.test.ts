@@ -1,5 +1,6 @@
-import {appReducerInitialState} from './app-reducer';
-import {appReducer, setAppError, setAppStatus} from './index';
+import {appReducerInitialState} from './application-reducer';
+import {appReducer} from './index';
+import {appActions} from '../CommonActions/commonApplicationActions';
 
 let startState: appReducerInitialState;
 beforeEach(() => {
@@ -9,6 +10,8 @@ beforeEach(() => {
         isInitialized: false
     }
 })
+
+const {setAppStatus, setAppError} = appActions
 
 test('Status should be set to correct task', () => {
     const action = setAppStatus({status: 'loading'})

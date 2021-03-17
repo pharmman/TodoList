@@ -2,10 +2,10 @@ import React, {ChangeEvent, useCallback} from 'react';
 import {Checkbox, IconButton} from '@material-ui/core';
 import {EditableSpan} from '../../../../EditableSpan/EditableSpan';
 import {Delete} from '@material-ui/icons';
-import {TaskStatuses, TaskType} from '../../../../../api/todolistsAPI';
 import {EntityStatusType} from '../todolist-reducer';
-import {useActions} from '../../../../App/store';
 import {tasksActions} from '../../index';
+import {useActions} from '../../../../../utils/redux-utils';
+import {TaskStatuses, TaskType} from '../../../../../api/types';
 
 export type TaskPropsType = {
     task: TaskType

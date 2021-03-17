@@ -4,11 +4,12 @@ import {EditableSpan} from '../../../EditableSpan/EditableSpan';
 import {Button, IconButton, Paper} from '@material-ui/core';
 import {Delete} from '@material-ui/icons';
 import {useSelector} from 'react-redux';
-import {AppRootStateType, useActions, useAppDispatch} from '../../../App/store';
 import {Task} from './Task/Task';
 import {TodolistDomainType} from './todolist-reducer';
-import {TaskStatuses, TaskType} from '../../../../api/todolistsAPI';
 import {tasksActions, todolistActions} from '../index';
+import {useActions, useAppDispatch} from '../../../../utils/redux-utils';
+import {AppRootStateType} from '../../../../utils/types';
+import {TaskStatuses, TaskType} from '../../../../api/types';
 
 
 type TodoListPropsType = {

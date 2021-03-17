@@ -1,9 +1,11 @@
 import {asyncActions as todolistsAsyncActions, EntityStatusType} from './todolist-reducer';
-import {APITasks, ResultCodes, TaskPriorities, TaskStatuses, TaskType} from '../../../../api/todolistsAPI';
+import {APITasks} from '../../../../api/todolistsAPI';
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {AppRootStateType, ThunkError} from '../../../App/store';
-import {setAppError, setAppStatus} from '../../../App';
+import {appActions} from '../../CommonActions/commonApplicationActions';
 import {handleServerAppError, handleServerNetworkError} from '../../../../utils/error-utils';
+import {AppRootStateType, ThunkErrorType} from '../../../../utils/types';
+import {ResultCodes, TaskPriorities, TaskStatuses, TaskType} from '../../../../api/types';
+
 //types
 export type UpdateTaskDomainType = {
     description?: string
@@ -17,6 +19,8 @@ export type UpdateTaskDomainType = {
 export type TasksStateType = {
     [key: string]: Array<TaskType>
 }
+
+const {setAppError, setAppStatus} = appActions
 
 export const updateTaskTC = createAsyncThunk('tasks/updateTask',
     async (params: { todolistId: string, taskId: string, model: UpdateTaskDomainType },
@@ -95,8 +99,8 @@ export const removeTaskTC = createAsyncThunk('tasks/removeTask',
             return thunkAPI.rejectWithValue({})
         }
     })
-export const createTaskTC = createAsyncThunk<{task:TaskType},  { id: string, title: string },
-   ThunkError >
+export const createTaskTC = createAsyncThunk<{ task: TaskType }, { id: string, title: string },
+    ThunkErrorType>
 ('tasks/createTask', async (params, thunkAPI) => {
     thunkAPI.dispatch(setAppStatus({status: 'loading'}))
     const res = await APITasks.createTask({...params})

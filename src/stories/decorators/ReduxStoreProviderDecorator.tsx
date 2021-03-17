@@ -4,13 +4,14 @@ import {combineReducers} from 'redux';
 import {tasksReducer} from '../../components/features/TodolistsList';
 import {todoListReducer} from '../../components/features/TodolistsList';
 import {v1} from 'uuid';
-import {TaskPriorities, TaskStatuses} from '../../api/todolistsAPI';
-import {AppRootStateType, rootReducer} from '../../components/App/store';
-import {appReducer} from '../../components/App/';
-import {authReducer} from '../../components/features/Auth/auth-reducer';
+import {rootReducer} from '../../app/store';
+import {appReducer} from '../../components/features/Application/';
+import {authReducer} from '../../components/features/Auth';
 import thunk from 'redux-thunk';
 import {configureStore} from '@reduxjs/toolkit';
 import {HashRouter} from 'react-router-dom';
+import {AppRootStateType} from '../../utils/types';
+import {TaskPriorities, TaskStatuses} from '../../api/types';
 
 
 const initialState: AppRootStateType = {

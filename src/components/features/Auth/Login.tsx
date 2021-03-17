@@ -12,9 +12,9 @@ import {
     Grid,
     TextField
 } from '@material-ui/core';
-import {useAppDispatch} from '../../App/store';
 import {Redirect} from 'react-router-dom';
 import {selectIsLoggedIn} from './selectors';
+import {useAppDispatch} from '../../../utils/redux-utils';
 
 type InitialValuesType = {
     email?: string | null,

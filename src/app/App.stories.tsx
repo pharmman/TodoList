@@ -1,11 +1,11 @@
 import React from 'react';
 import {Meta, Story} from '@storybook/react/types-6-0';
 import App from './App';
-import {ReduxStoreProviderDecorator} from '../../stories/decorators/ReduxStoreProviderDecorator';
+import {ReduxStoreProviderDecorator} from '../stories/decorators/ReduxStoreProviderDecorator';
 
 
 export default {
-    title: 'Todolist/App',
+    title: 'Todolist/Application',
     component: App,
     decorators: [ReduxStoreProviderDecorator],
 } as Meta;

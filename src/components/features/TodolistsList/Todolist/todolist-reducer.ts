@@ -1,8 +1,9 @@
-import {APITodolist, ResultCodes, TodolistType} from '../../../../api/todolistsAPI';
+import {APITodolist} from '../../../../api/todolistsAPI';
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {handleServerAppError, handleServerNetworkError} from '../../../../utils/error-utils';
-import {ThunkError} from '../../../App/store';
-import {setAppError, setAppStatus} from '../../../App';
+import {ThunkErrorType} from '../../../../utils/types';
+import {appActions} from '../../CommonActions/commonApplicationActions';
+import {ResultCodes, TodolistType} from '../../../../api/types';
 
 //types
 export type FilterValuesType = 'all' | 'active' | 'completed'
@@ -13,7 +14,9 @@ export type TodolistDomainType = TodolistType & {
     entityStatus: EntityStatusType
 }
 
-  const getTodolists = createAsyncThunk('todolist/getTodolist',
+const {setAppStatus, setAppError} = appActions
+
+const getTodolists = createAsyncThunk('todolist/getTodolist',
     async (param, {dispatch, rejectWithValue}) => {
         dispatch(setAppStatus({status: 'loading'}))
         const res = await APITodolist.getTodolist()
@@ -30,8 +33,8 @@ export type TodolistDomainType = TodolistType & {
             return rejectWithValue(err)
         }
     })
-  const createTodolist = createAsyncThunk<{todolist: TodolistType}, string,
-      ThunkError>('todolist/createTodolist',
+const createTodolist = createAsyncThunk<{ todolist: TodolistType }, string,
+    ThunkErrorType>('todolist/createTodolist',
     async (title, {dispatch, rejectWithValue}) => {
         dispatch(setAppStatus({status: 'loading'}))
         const res = await APITodolist.createTodolist(title)
@@ -48,7 +51,7 @@ export type TodolistDomainType = TodolistType & {
             return rejectWithValue({errors: [err.message], fieldsErrors: undefined})
         }
     })
-  const deleteTodolist = createAsyncThunk('todolist/deleteTodolist',
+const deleteTodolist = createAsyncThunk('todolist/deleteTodolist',
     async (id: string, {dispatch, rejectWithValue}) => {
         dispatch(setAppStatus({status: 'loading'}))
         dispatch(setTodolistEntityStatus({entityStatus: 'loading', id}))
@@ -70,7 +73,7 @@ export type TodolistDomainType = TodolistType & {
             return rejectWithValue(err)
         }
     })
-  const changeTodolistTitle = createAsyncThunk('todolist/changeTodolistTitle',
+const changeTodolistTitle = createAsyncThunk('todolist/changeTodolistTitle',
     async (param: { id: string, newTitle: string }, {dispatch, rejectWithValue}) => {
         const {id, newTitle} = param
         dispatch(setAppStatus({status: 'loading'}))
