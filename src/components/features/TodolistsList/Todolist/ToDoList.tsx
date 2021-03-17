@@ -1,10 +1,10 @@
 import React, {useCallback, useEffect} from 'react';
-import {AddItemForm} from '../../../AddItemForm/AddItemForm';
+import {AddItemForm, AddItemFormSubmitHelpersType} from '../../../AddItemForm/AddItemForm';
 import {EditableSpan} from '../../../EditableSpan/EditableSpan';
 import {Button, IconButton, Paper} from '@material-ui/core';
 import {Delete} from '@material-ui/icons';
 import {useSelector} from 'react-redux';
-import {AppRootStateType, useActions} from '../../../App/store';
+import {AppRootStateType, useActions, useAppDispatch} from '../../../App/store';
 import {Task} from './Task/Task';
 import {TodolistDomainType} from './todolist-reducer';
 import {TaskStatuses, TaskType} from '../../../../api/todolistsAPI';
@@ -21,8 +21,9 @@ export const ToDoList: React.FC<TodoListPropsType> = React.memo(({
                                                                      demo
                                                                  }) => {
     const tasks = useSelector<AppRootStateType, Array<TaskType>>(state => state.tasks[todolist.id])
-    const {createTaskTC, getTasksTC} = useActions(tasksActions)
+    const {getTasksTC} = useActions(tasksActions)
     const {changeTodoListFilter, deleteTodolist, changeTodolistTitle} = useActions(todolistActions)
+    const dispatch = useAppDispatch()
 
     useEffect(() => {
         if (demo) {
@@ -49,9 +50,22 @@ export const ToDoList: React.FC<TodoListPropsType> = React.memo(({
 
     const removeTodoList = () => deleteTodolist(todolist.id);
 
-    const addTask = useCallback((title: string) => {
-        createTaskTC({id: todolist.id, title})
-    }, [todolist.id, createTaskTC])
+    const addTask = useCallback(async(title: string, helper: AddItemFormSubmitHelpersType) => {
+       // const action = await createTaskTC({id: todolist.id, title})
+        const thunk = tasksActions.createTaskTC({id: todolist.id, title})
+        const action = await dispatch(thunk)
+
+        if (tasksActions.createTaskTC.rejected.match(action)) {
+            if (action.payload?.errors?.length) {
+                const error = action.payload?.errors[0]
+                helper.setError(error)
+            } else {
+                helper.setError('Some error occurred')
+            }
+        } else {
+            helper.setTitle('')
+        }
+    }, [todolist.id, dispatch])
 
     const localChangeTodoListTitle = useCallback((title: string) => {
         changeTodolistTitle({id: todolist.id, newTitle: title})

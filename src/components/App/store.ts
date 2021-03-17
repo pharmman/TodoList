@@ -1,12 +1,13 @@
-import {tasksReducer} from '../features/TodolistsList/Todolist/tasks-reducer';
-import {todoListReducer} from '../features/TodolistsList/Todolist/todolist-reducer';
-import {appReducer} from './app-reducer';
+import {tasksReducer} from '../features/TodolistsList';
+import {todoListReducer} from '../features/TodolistsList';
+import {appReducer} from './';
 import {ActionCreatorsMapObject, bindActionCreators, combineReducers} from 'redux';
 import thunk from 'redux-thunk';
-import {authReducer} from '../features/Auth/auth-reducer';
+import {authReducer} from '../features/Auth';
 import {configureStore} from '@reduxjs/toolkit';
 import {useDispatch} from 'react-redux';
 import {useMemo} from 'react';
+import {FieldsErrorsType} from '../../api/todolistsAPI';
 
 
 export const rootReducer = combineReducers({
@@ -37,3 +38,6 @@ export function useActions<T extends ActionCreatorsMapObject<any>>(actions: T) {
 
     return boundActions
 }
+
+
+export type ThunkError = { rejectValue: { errors: Array<string>, fieldsErrors?: Array<FieldsErrorsType> } }

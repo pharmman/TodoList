@@ -2,12 +2,11 @@ import {
     FilterValuesType,
     setTodolistEntityStatus,
     TodolistDomainType,
-    todoListReducer,
     changeTodoListFilter,
-
 } from './todolist-reducer';
 import {v1} from 'uuid';
 import {asyncActions as todolistAsyncActions} from './todolist-reducer'
+import {todoListReducer} from '../index';
 
 const {changeTodolistTitle, createTodolist, deleteTodolist, getTodolists} = todolistAsyncActions
 let startState: Array<TodolistDomainType>

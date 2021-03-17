@@ -1,9 +1,9 @@
 import React, {useCallback, useEffect} from 'react';
 import {useSelector} from 'react-redux';
-import {AppRootStateType, useActions} from '../../App/store';
+import {AppRootStateType, useActions, useAppDispatch} from '../../App/store';
 import {TodolistDomainType} from './Todolist/todolist-reducer';
-import {Grid, Paper} from '@material-ui/core';
-import {AddItemForm} from '../../AddItemForm/AddItemForm';
+import {Grid} from '@material-ui/core';
+import {AddItemForm, AddItemFormSubmitHelpersType} from '../../AddItemForm/AddItemForm';
 import {ToDoList} from './Todolist/ToDoList';
 import {Redirect} from 'react-router-dom';
 import {authSelectors} from '../Auth';
@@ -16,8 +16,8 @@ type TodolistsListPropsType = {
 export const TodolistsList: React.FC<TodolistsListPropsType> = ({demo}) => {
     const todoLists = useSelector<AppRootStateType, Array<TodolistDomainType>>(state => state.todoLists)
     const isLoggedIn = useSelector(authSelectors.selectIsLoggedIn)
-    const {createTodolist, getTodolists} = useActions(todolistActions)
-
+    const {getTodolists} = useActions(todolistActions)
+    const dispatch = useAppDispatch()
 
     useEffect(() => {
         if (!isLoggedIn || demo) {
@@ -27,9 +27,26 @@ export const TodolistsList: React.FC<TodolistsListPropsType> = ({demo}) => {
     }, [isLoggedIn, demo, getTodolists])
 
 
-    const addTodoList = useCallback((title: string) => {
-        createTodolist(title)
-    }, [createTodolist])
+    const addTodoList = useCallback(async (title: string, helper: AddItemFormSubmitHelpersType) => {
+        // createTodolist(title)
+
+
+        const thunk = todolistActions.createTodolist(title)
+        const action = await dispatch(thunk)
+
+        if (todolistActions.createTodolist.rejected.match(action)) {
+            if (action.payload?.errors?.length) {
+                const error = action.payload?.errors[0]
+                helper.setError(error)
+            } else {
+                helper.setError('Some error occurred')
+            }
+        } else {
+            helper.setTitle('')
+        }
+
+
+    }, [dispatch])
 
 
     if (!isLoggedIn) {

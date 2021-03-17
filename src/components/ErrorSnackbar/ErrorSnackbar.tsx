@@ -2,8 +2,9 @@ import React from 'react';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert, {AlertProps} from '@material-ui/lab/Alert';
 import {AppRootStateType} from '../App/store';
-import {AppErrorType, setAppError} from '../App/app-reducer';
+import {AppErrorType} from '../App/app-reducer';
 import {useDispatch, useSelector} from 'react-redux';
+import {setAppError} from '../App';
 
 function Alert(props: AlertProps) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;

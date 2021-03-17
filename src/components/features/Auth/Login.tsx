@@ -58,8 +58,6 @@ export const Login = () => {
                 formikHelpers.setFieldError(error.field, error.error)
                 }
             }
-            // dispatch(login(values))
-            // formik.resetForm()
         },
     });
     if (isLoggedIn) {

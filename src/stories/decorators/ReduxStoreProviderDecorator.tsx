@@ -1,12 +1,12 @@
 import React from 'react';
 import {Provider} from 'react-redux';
 import {combineReducers} from 'redux';
-import {tasksReducer} from '../../components/features/TodolistsList/Todolist/tasks-reducer';
-import {todoListReducer} from '../../components/features/TodolistsList/Todolist/todolist-reducer';
+import {tasksReducer} from '../../components/features/TodolistsList';
+import {todoListReducer} from '../../components/features/TodolistsList';
 import {v1} from 'uuid';
 import {TaskPriorities, TaskStatuses} from '../../api/todolistsAPI';
 import {AppRootStateType, rootReducer} from '../../components/App/store';
-import {appReducer} from '../../components/App/app-reducer';
+import {appReducer} from '../../components/App/';
 import {authReducer} from '../../components/features/Auth/auth-reducer';
 import thunk from 'redux-thunk';
 import {configureStore} from '@reduxjs/toolkit';

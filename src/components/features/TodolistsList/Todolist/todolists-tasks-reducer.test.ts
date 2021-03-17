@@ -1,6 +1,7 @@
-import {TodolistDomainType, todoListReducer} from './todolist-reducer';
-import {tasksReducer, TasksStateType} from './tasks-reducer';
+import {TodolistDomainType} from './todolist-reducer';
+import {TasksStateType} from './tasks-reducer';
 import {asyncActions as todolistAsyncActions} from './todolist-reducer'
+import {tasksReducer, todoListReducer} from '../index';
 
 const {createTodolist} = todolistAsyncActions
 

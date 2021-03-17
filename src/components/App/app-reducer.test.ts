@@ -1,4 +1,5 @@
-import {appReducer, appReducerInitialState, setAppError, setAppStatus} from './app-reducer';
+import {appReducerInitialState} from './app-reducer';
+import {appReducer, setAppError, setAppStatus} from './index';
 
 let startState: appReducerInitialState;
 beforeEach(() => {

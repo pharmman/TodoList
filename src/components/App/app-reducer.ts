@@ -34,7 +34,7 @@ export const asyncActions = {
     initializeApp
 }
 
-const slice = createSlice({
+export const slice = createSlice({
     name: 'app',
     initialState: initialState,
     reducers: {
@@ -53,5 +53,5 @@ const slice = createSlice({
     }
 })
 
-export const appReducer = slice.reducer
-export const {setAppStatus, setAppError} = slice.actions
+const appReducer = slice.reducer
+const {setAppStatus} = slice.actions

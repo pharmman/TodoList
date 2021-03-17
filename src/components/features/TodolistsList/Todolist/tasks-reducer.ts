@@ -1,10 +1,9 @@
-import {EntityStatusType} from './todolist-reducer';
+import {asyncActions as todolistsAsyncActions, EntityStatusType} from './todolist-reducer';
 import {APITasks, ResultCodes, TaskPriorities, TaskStatuses, TaskType} from '../../../../api/todolistsAPI';
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {AppRootStateType} from '../../../App/store';
-import {setAppError, setAppStatus} from '../../../App/app-reducer';
+import {AppRootStateType, ThunkError} from '../../../App/store';
+import {setAppError, setAppStatus} from '../../../App';
 import {handleServerAppError, handleServerNetworkError} from '../../../../utils/error-utils';
-import {asyncActions as todolistsAsyncActions} from './todolist-reducer';
 //types
 export type UpdateTaskDomainType = {
     description?: string
@@ -42,7 +41,6 @@ export const updateTaskTC = createAsyncThunk('tasks/updateTask',
         try {
             if (res.data.resultCode === ResultCodes.Success) {
                 dispatch(setAppStatus({status: 'succeeded'}))
-                // return (param.todolistId, param.taskId, {task: res.data.data.item})
                 return params
             } else {
                 handleServerAppError<{ item: TaskType }>(res.data, dispatch)
@@ -97,21 +95,22 @@ export const removeTaskTC = createAsyncThunk('tasks/removeTask',
             return thunkAPI.rejectWithValue({})
         }
     })
-export const createTaskTC = createAsyncThunk
-('tasks/createTask', async (params: { id: string, title: string }, {dispatch, rejectWithValue}) => {
-    dispatch(setAppStatus({status: 'loading'}))
+export const createTaskTC = createAsyncThunk<{task:TaskType},  { id: string, title: string },
+   ThunkError >
+('tasks/createTask', async (params, thunkAPI) => {
+    thunkAPI.dispatch(setAppStatus({status: 'loading'}))
     const res = await APITasks.createTask({...params})
     try {
         if (res.data.resultCode === ResultCodes.Success) {
-            dispatch(setAppStatus({status: 'succeeded'}))
+            thunkAPI.dispatch(setAppStatus({status: 'succeeded'}))
             return {task: res.data.data.item}
         } else {
-            handleServerAppError<{ item: TaskType }>(res.data, dispatch)
-            return rejectWithValue({})
+            handleServerAppError<{ item: TaskType }>(res.data, thunkAPI.dispatch)
+            return thunkAPI.rejectWithValue({errors: res.data.messages, fieldsErrors: res.data.fieldsErrors})
         }
     } catch (err) {
-        handleServerNetworkError(err, dispatch)
-        return rejectWithValue({})
+        handleServerNetworkError(err, thunkAPI.dispatch)
+        return thunkAPI.rejectWithValue({errors: [err.message], fieldsErrors: undefined})
     }
 })
 
@@ -122,7 +121,7 @@ export const asyncActions = {
     createTaskTC
 }
 
-const slice = createSlice({
+export const slice = createSlice({
     name: 'tasks',
     initialState: {count: []} as TasksStateType,
     reducers: {
@@ -164,7 +163,6 @@ const slice = createSlice({
     }
 })
 
-export const tasksReducer = slice.reducer
 
 //actions
 export const {setTaskEntityStatus} = slice.actions

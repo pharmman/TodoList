@@ -1,4 +1,4 @@
-import {setAppStatus} from '../../App/app-reducer';
+import {setAppStatus} from '../../App';
 import {authAPI, FieldsErrorsType, LoginRequestPayloadType, ResultCodes} from '../../../api/todolistsAPI';
 import {handleServerAppError} from '../../../utils/error-utils';
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';

@@ -1,11 +1,11 @@
 import {
     setTaskEntityStatus,
-    tasksReducer,
     TasksStateType
 } from './tasks-reducer';
 import {TaskPriorities, TaskStatuses} from '../../../../api/todolistsAPI';
 import {asyncActions as tasksAsyncActions} from './tasks-reducer'
 import {asyncActions as todolistAsyncActions} from './todolist-reducer'
+import {tasksReducer} from '../index';
 
 const {createTaskTC, getTasksTC, removeTaskTC, updateTaskTC} = tasksAsyncActions
 const {createTodolist, deleteTodolist, getTodolists} = todolistAsyncActions
