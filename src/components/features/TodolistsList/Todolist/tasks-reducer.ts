@@ -5,6 +5,7 @@ import {appActions} from '../../CommonActions/commonApplicationActions';
 import {handleServerAppError, handleServerNetworkError} from '../../../../utils/error-utils';
 import {AppRootStateType, ThunkErrorType} from '../../../../utils/types';
 import {ResultCodes, TaskPriorities, TaskStatuses, TaskType} from '../../../../api/types';
+import {authActions} from '../../Auth';
 
 //types
 export type UpdateTaskDomainType = {
@@ -127,7 +128,7 @@ export const asyncActions = {
 
 export const slice = createSlice({
     name: 'tasks',
-    initialState: {count: []} as TasksStateType,
+    initialState: {todolist: []} as TasksStateType,
     reducers: {
         setTaskEntityStatus: (state, action: PayloadAction<{ entityStatus: EntityStatusType, todolistId: string, taskId: string }>) => {
             const tasks = state[action.payload.todolistId]
@@ -164,6 +165,12 @@ export const slice = createSlice({
             const tasks = state[action.payload.task.todoListId]
             tasks.unshift(action.payload.task)
         }))
+        builder.addCase(authActions.logout.fulfilled, (state) => {
+          const keys = Object.keys(state)
+          keys.forEach(k => {
+              delete state[k]
+          })
+        })
     }
 })
 

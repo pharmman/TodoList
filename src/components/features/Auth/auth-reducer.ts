@@ -25,7 +25,7 @@ export const login = createAsyncThunk<undefined, LoginRequestPayloadType, {
     }
 })
 
-const logout = createAsyncThunk('auth/logout', async (params, {dispatch, rejectWithValue}) => {
+export const logout = createAsyncThunk('auth/logout', async (params, {dispatch, rejectWithValue}) => {
     dispatch(appActions.setAppStatus({status: 'loading'}))
     try {
         let res = await authAPI.logOut()

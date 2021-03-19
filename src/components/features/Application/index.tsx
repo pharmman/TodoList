@@ -6,5 +6,6 @@ const appReducer = appSlice.reducer
 export {
     appSelectors,
     appAsyncActions,
-    appReducer
+    appReducer,
+
 }

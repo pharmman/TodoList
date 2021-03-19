@@ -1,21 +1,19 @@
 import React, {useCallback, useEffect} from 'react';
 import {useSelector} from 'react-redux';
-import {TodolistDomainType} from './Todolist/todolist-reducer';
 import {Grid} from '@material-ui/core';
 import {AddItemForm, AddItemFormSubmitHelpersType} from '../../AddItemForm/AddItemForm';
 import {ToDoList} from './Todolist/ToDoList';
 import {Redirect} from 'react-router-dom';
 import {authSelectors} from '../Auth';
-import {todolistActions} from './index';
+import {todolistActions, todolistsSelectors} from './index';
 import {useActions, useAppDispatch} from '../../../utils/redux-utils';
-import {AppRootStateType} from '../../../utils/types';
 
 type TodolistsListPropsType = {
     demo?: boolean
 }
 
 export const TodolistsList: React.FC<TodolistsListPropsType> = ({demo}) => {
-    const todoLists = useSelector<AppRootStateType, Array<TodolistDomainType>>(state => state.todoLists)
+    const todoLists = useSelector(todolistsSelectors.todoLists)
     const isLoggedIn = useSelector(authSelectors.selectIsLoggedIn)
     const {getTodolists} = useActions(todolistActions)
     const dispatch = useAppDispatch()
@@ -29,8 +27,6 @@ export const TodolistsList: React.FC<TodolistsListPropsType> = ({demo}) => {
 
 
     const addTodoList = useCallback(async (title: string, helper: AddItemFormSubmitHelpersType) => {
-        // createTodolist(title)
-
 
         const thunk = todolistActions.createTodolist(title)
         const action = await dispatch(thunk)
@@ -45,8 +41,6 @@ export const TodolistsList: React.FC<TodolistsListPropsType> = ({demo}) => {
         } else {
             helper.setTitle('')
         }
-
-
     }, [dispatch])
 
 

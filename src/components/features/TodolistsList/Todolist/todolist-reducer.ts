@@ -4,6 +4,7 @@ import {handleServerAppError, handleServerNetworkError} from '../../../../utils/
 import {ThunkErrorType} from '../../../../utils/types';
 import {appActions} from '../../CommonActions/commonApplicationActions';
 import {ResultCodes, TodolistType} from '../../../../api/types';
+import {authActions} from '../../Auth';
 
 //types
 export type FilterValuesType = 'all' | 'active' | 'completed'
@@ -126,6 +127,9 @@ export const slice = createSlice({
             builder.addCase(changeTodolistTitle.fulfilled, (state, action) => {
                 const index = state.findIndex(tl => tl.id === action.payload.id)
                 state[index].title = action.payload.title
+            })
+            builder.addCase(authActions.logout.fulfilled, (state) => {
+                state.length = 0
             })
         }
     }

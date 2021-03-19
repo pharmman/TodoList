@@ -31,7 +31,7 @@ export const ToDoList: React.FC<TodoListPropsType> = React.memo(({
             return
         }
         getTasksTC(todolist.id)
-    }, [todolist.id, demo, getTasksTC])
+    }, [demo, getTasksTC, todolist.id])
 
     let tasksForTodoList: Array<TaskType> = tasks
 
@@ -52,7 +52,6 @@ export const ToDoList: React.FC<TodoListPropsType> = React.memo(({
     const removeTodoList = () => deleteTodolist(todolist.id);
 
     const addTask = useCallback(async(title: string, helper: AddItemFormSubmitHelpersType) => {
-       // const action = await createTaskTC({id: todolist.id, title})
         const thunk = tasksActions.createTaskTC({id: todolist.id, title})
         const action = await dispatch(thunk)
 
