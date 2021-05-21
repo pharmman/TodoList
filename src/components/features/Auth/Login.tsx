@@ -33,8 +33,8 @@ const validate = (values: InitialValuesType) => {
 
     if (!values.password) {
         errors.password = 'Required';
-    } else if (values.password.length < 6) {
-        errors.password = 'Must be 6 characters or more';
+    } else if (values.password.length < 4) {
+        errors.password = 'Must be 4 characters or more';
     }
     return errors
 }
