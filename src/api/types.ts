@@ -1,13 +1,5 @@
 import {EntityStatusType} from '../components/features/TodolistsList/Todolist/todolist-reducer';
 
-export type TodolistType = {
-    id: string,
-    addedDate: string,
-    order: number,
-    title: string
-}
-
-//types
 export enum TaskStatuses {
     New = 0,
     InProgress = 1,
@@ -27,6 +19,14 @@ export enum ResultCodes {
     Success = 0,
     Error = 1,
     Captcha = 10
+}
+
+//types
+export type TodolistType = {
+    id: string,
+    addedDate: string,
+    order: number,
+    title: string
 }
 
 export type TaskType = {

@@ -7,5 +7,4 @@ export {
     appSelectors,
     appAsyncActions,
     appReducer,
-
 }
